@@ -69,7 +69,7 @@ class Player:
  
     def move(self, keys):
 
-        if keys[pygame.K_SPACE] and self.dash_cooldown >= 300 and self.num == 1:
+        if keys[pygame.K_SPACE] and self.dash_cooldown >= 300 and self.num == 2:
             self.dash_cooldown = 0
             self.speed = self.dash_speed
 
@@ -135,9 +135,25 @@ class Player:
                 break
 
         return horizontal_collision, vertical_collision
+    
+    def shoot(self, keys, tick):
+            if keys[pygame.K_1]:
+                if tick % 500 == 0:
+                    self.shoot()
+            
+            if keys[pygame.K_2]:
+                if round(self.shooting_angle, 2) <= -90:
+                    self.angle_factor = 8
+                if round(self.shooting_angle, 2) >= 90:
+                    self.angle_factor = -8
+                
+                if tick % 40 == 0:
+                    self.shooting_angle += self.angle_factor
 
             
-    def update(self, walls):
+    def update(self, walls, keys, tick):
+        self.move(keys)
+        self.shoot(keys, tick)
         horizontal_collision, vertical_collision = self.collision_check_with_walls(walls)
         if not horizontal_collision:    
             self.x += self.vx

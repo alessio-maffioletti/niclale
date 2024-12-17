@@ -33,26 +33,10 @@ while True:
             quit()
 
     keys = pygame.key.get_pressed()
-
-    if keys[pygame.K_1]:
-        if tick % 500 == 0:
-            player1.shoot()
-    
-    if keys[pygame.K_2]:
-        if round(player1.shooting_angle, 2) <= -90:
-            player1.angle_factor = 8
-        if round(player1.shooting_angle, 2) >= 90:
-            player1.angle_factor = -8
-        
-        if tick % 40 == 0:
-            player1.shooting_angle += player1.angle_factor
     
 
     # draw / render
     screen.fill(BACKGROUND_COLOR)
-    
-    player1.move(keys)
-    player2.move(keys)
 
     # update
 
@@ -64,8 +48,8 @@ while True:
         bullet.draw(screen)
         bullet.update()
 
-    player1.update(wall_list)
-    player2.update(wall_list)
+    player1.update(wall_list, keys, tick)
+    player2.update(wall_list, keys, tick)
 
     player1.draw(screen)
     player2.draw(screen)
