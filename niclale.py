@@ -51,8 +51,8 @@ while True:
     # draw / render
     screen.fill(BACKGROUND_COLOR)
     
-    player1.move(keys, tick)
-    player2.move(keys, tick)
+    player1.move(keys)
+    player2.move(keys)
 
     # update
 
@@ -64,11 +64,13 @@ while True:
         bullet.draw(screen)
         bullet.update()
 
-    player1.update()
-    player2.update()
+    player1.update(wall_list)
+    player2.update(wall_list)
 
     player1.draw(screen)
     player2.draw(screen)
+
+    clock.tick(60)
 
     pygame.display.update()
     tick += 1

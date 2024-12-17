@@ -33,6 +33,9 @@ class Player:
         self.color = color
         self.num = num
 
+        self.dash_speed = 50
+        self.dash_cooldown = 0
+
         self.shooting_angle = -90
         self.angle_factor = 0.2
         self.charge_tick = None
@@ -64,7 +67,12 @@ class Player:
         bullet_list.append(new_bullet)
         #self.shooting_angle = -90
  
-    def move(self, keys, tick):
+    def move(self, keys):
+
+        if keys[pygame.K_SPACE] and self.dash_cooldown >= 300 and self.num == 1:
+            self.dash_cooldown = 0
+            self.speed = self.dash_speed
+
         if self.num == 1:
             if keys[pygame.K_w]:
                 self.vy = -self.speed
@@ -72,32 +80,69 @@ class Player:
                 self.vy = self.speed
             else:
                 self.vy = 0
- 
+
             if keys[pygame.K_a]:
                 self.vx = -self.speed
             elif keys[pygame.K_d]:
                 self.vx = self.speed
             else:
                 self.vx = 0
-
-            if keys[pygame.K_SPACE]:
-                self.shooting_angle += 1
- 
-        if self.num == 2:
+            
+        elif self.num == 2:
             if keys[pygame.K_UP]:
                 self.vy = -self.speed
             elif keys[pygame.K_DOWN]:
                 self.vy = self.speed
             else:
                 self.vy = 0
- 
+
             if keys[pygame.K_LEFT]:
                 self.vx = -self.speed
             elif keys[pygame.K_RIGHT]:
                 self.vx = self.speed
             else:
                 self.vx = 0
+
+
+        if self.vx != 0 and self.vy != 0:
+            self.vx /= math.sqrt(2)
+            self.vy /= math.sqrt(2)
+
+
+        self.speed = 3
  
-    def update(self):
-        self.x += self.vx
-        self.y += self.vy
+    def collision_check_with_walls(self, walls):
+        # Check horizontal movement 
+        new_x = self.x + self.vx
+        new_y = self.y
+        player_rect = pygame.Rect(new_x, new_y, self.width, self.height)
+        horizontal_collision = False
+        
+        for wall in walls:
+            if player_rect.colliderect(wall.get_rect()):
+                horizontal_collision = True
+                break
+
+        # Check vertical movement (up/down)
+        new_x = self.x
+        new_y = self.y + self.vy
+        player_rect = pygame.Rect(new_x, new_y, self.width, self.height)
+        vertical_collision = False
+        
+        for wall in walls:
+            if player_rect.colliderect(wall.get_rect()):
+                vertical_collision = True
+                break
+
+        return horizontal_collision, vertical_collision
+
+            
+    def update(self, walls):
+        horizontal_collision, vertical_collision = self.collision_check_with_walls(walls)
+        if not horizontal_collision:    
+            self.x += self.vx
+
+        if not vertical_collision:
+            self.y += self.vy
+
+        self.dash_cooldown += 1
