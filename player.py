@@ -69,7 +69,7 @@ class Player:
  
     def move(self, keys):
 
-        if keys[pygame.K_SPACE] and self.dash_cooldown >= 300 and self.num == 1:
+        if keys[pygame.K_SPACE] and self.dash_cooldown >= 300 and self.num == 2:
             self.dash_cooldown = 0
             self.speed = self.dash_speed
 
