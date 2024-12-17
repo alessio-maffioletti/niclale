@@ -40,7 +40,7 @@ while True:
 
     # update
 
-    # draw / render
+    # draw / render1
     for wall in wall_list:
         wall.draw(screen)
 

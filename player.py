@@ -136,10 +136,10 @@ class Player:
 
         return horizontal_collision, vertical_collision
     
-    def shoot(self, keys, tick):
+    def shoot_a(self, keys, tick):
             if keys[pygame.K_1]:
-                if tick % 500 == 0:
-                    self.shoot()
+                #if tick % 500 == 0:
+                self.shoot(keys, tick)
             
             if keys[pygame.K_2]:
                 if round(self.shooting_angle, 2) <= -90:
@@ -147,13 +147,13 @@ class Player:
                 if round(self.shooting_angle, 2) >= 90:
                     self.angle_factor = -8
                 
-                if tick % 40 == 0:
-                    self.shooting_angle += self.angle_factor
+                #if tick % 40 == 0:
+                self.shooting_angle += self.angle_factor
 
             
     def update(self, walls, keys, tick):
         self.move(keys)
-        self.shoot(keys, tick)
+        self.shoot_a(keys, tick)
         horizontal_collision, vertical_collision = self.collision_check_with_walls(walls)
         if not horizontal_collision:    
             self.x += self.vx
