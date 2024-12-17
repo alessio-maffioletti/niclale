@@ -1,0 +1,19 @@
+import json
+
+GRID_WIDTH = 30
+
+WIDTH = GRID_WIDTH * 20
+HEIGHT = GRID_WIDTH * 20
+
+# walls
+WALL_WIDTH = GRID_WIDTH
+WALL_BORDER = 3
+#3d
+D_WALL_HEIGHT = int(WALL_WIDTH/2)
+
+WALLS = json.load(open("walls.json"))
+
+#colors
+BACKGROUND_COLOR = (62, 68, 77)
+WALL_COLOR = (201, 181, 181)
+WALL_BORDER_COLOR = (125, 110, 110)
