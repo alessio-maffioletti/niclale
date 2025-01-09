@@ -138,7 +138,7 @@ class Player:
     
     def shoot(self, keys, tick):
             if keys[pygame.K_1]:
-                if tick % 500 == 0:
+                if tick % 10 == 0:
                     self.shoot()
             
             if keys[pygame.K_2]:
