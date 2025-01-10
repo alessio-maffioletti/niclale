@@ -139,7 +139,7 @@ class Player:
     def shoot_a(self, keys, tick):
             if keys[pygame.K_1]:
                 #if tick % 500 == 0:
-                self.shoot(keys, tick)
+                self.shoot()
             
             if keys[pygame.K_2]:
                 if round(self.shooting_angle, 2) <= -90:
