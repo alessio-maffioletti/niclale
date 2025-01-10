@@ -11,9 +11,14 @@ WALL_BORDER = 3
 #3d
 D_WALL_HEIGHT = int(WALL_WIDTH/2)
 
-WALLS = json.load(open("walls.json"))
+WALLS = json.load(open("walls1.json"))
 
 #colors
 BACKGROUND_COLOR = (62, 68, 77)
 WALL_COLOR = (201, 181, 181)
 WALL_BORDER_COLOR = (125, 110, 110)
+
+BULLET_SPEED = 5
+BULLET_COOLDOWN = 10
+
+ARROW_WAIT = 5

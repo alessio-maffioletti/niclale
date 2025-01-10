@@ -10,7 +10,7 @@ class Bullet:
         self.angle = angle
         self.vy = math.sin(math.radians(angle))
         self.vx = math.cos(math.radians(angle))
-        self.speed = 5/10
+        self.speed = BULLET_SPEED
         self.health = 1
         self.damage = 10
     
@@ -39,6 +39,9 @@ class Player:
         self.shooting_angle = -90
         self.angle_factor = 0.2
         self.charge_tick = None
+
+        self.last_shot = 0
+        self.cooldown = BULLET_COOLDOWN
  
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
@@ -60,12 +63,6 @@ class Player:
 
         # Blit the rotated rectangle
         screen.blit(rotated, rotated_rect.topleft)
-
-
-    def shoot(self):
-        new_bullet = Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle)
-        bullet_list.append(new_bullet)
-        #self.shooting_angle = -90
  
     def move(self, keys):
 
@@ -136,10 +133,12 @@ class Player:
 
         return horizontal_collision, vertical_collision
     
-    def shoot_a(self, keys, tick):
+    def shoot(self, keys, tick):
             if keys[pygame.K_1]:
-                #if tick % 500 == 0:
-                self.shoot()
+                if tick - self.last_shot > self.cooldown:
+                    new_bullet = Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle)
+                    bullet_list.append(new_bullet)
+                    self.last_shot = tick
             
             if keys[pygame.K_2]:
                 if round(self.shooting_angle, 2) <= -90:
@@ -148,12 +147,13 @@ class Player:
                     self.angle_factor = -8
                 
                 #if tick % 40 == 0:
-                self.shooting_angle += self.angle_factor
+                if tick - self.last_shot > ARROW_WAIT:
+                    self.shooting_angle += self.angle_factor
 
             
     def update(self, walls, keys, tick):
         self.move(keys)
-        self.shoot_a(keys, tick)
+        self.shoot(keys, tick)
         horizontal_collision, vertical_collision = self.collision_check_with_walls(walls)
         if not horizontal_collision:    
             self.x += self.vx
