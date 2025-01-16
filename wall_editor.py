@@ -3,7 +3,7 @@ import json
 import os
 
 # Constants
-GRID_SIZE = 20
+GRID_SIZE = 25
 CELL_SIZE = 30
 WINDOW_SIZE = GRID_SIZE * CELL_SIZE
 BG_COLOR = (255, 255, 255)

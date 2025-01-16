@@ -12,10 +12,8 @@ class Wall():
             pygame.draw.rect(screen, WALL_COLOR, (self.x, self.y, WALL_WIDTH, WALL_WIDTH))        
             pygame.draw.rect(screen, WALL_BORDER_COLOR, (self.x, self.y + WALL_WIDTH, WALL_WIDTH, D_WALL_HEIGHT))
         else:
-            pygame.draw.rect(screen, WALL_COLOR, (self.x, self.y, WALL_WIDTH, WALL_WIDTH))  
+            pygame.draw.rect(screen, WALL_COLOR, (self.x, self.y, WALL_WIDTH, WALL_WIDTH))   
 
     def get_rect(self):
-        return pygame.Rect(self.x, self.y, WALL_WIDTH, WALL_WIDTH) 
-
-    def __eq__(self, other):
-        pass
+        return pygame.Rect(self.x, self.y, WALL_WIDTH, WALL_WIDTH)
+    
