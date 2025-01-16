@@ -8,7 +8,7 @@ import walls
 
 # player setup
 player1 = player.Player(3 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "red", 1)
-player2 = player.Player(21 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "blue", 2)
+player2 = player.Player(16 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "blue", 2)
 
 # pygame setup
 pygame.init()

@@ -197,18 +197,20 @@ class Player:
             if keys[pygame.K_k]:
 
                 if self.shooting_direction == 0:
-                    if round(self.shooting_angle, 2) <= -82:
+
+                    if round(self.shooting_angle, 2) <= -90:
                         self.angle_factor = 8
-                    if round(self.shooting_angle, 2) >= 82:
+                    if round(self.shooting_angle, 2) >= 90:
                         self.angle_factor = -8
+
                 else:
-                    if round(self.shooting_angle, 2) <= -98:
+                    if round(self.shooting_angle, 2) <= 90:
                         self.angle_factor = 8
-                    if round(self.shooting_angle, 2) >= 98:
+                    if round(self.shooting_angle, 2) >= 270:
                         self.angle_factor = -8
-                    
+                        
                 if tick - self.last_shot > ARROW_WAIT:
-                    self.shooting_angle += self.angle_factor
+                        self.shooting_angle += self.angle_factor
 
             
     def update(self, walls, keys, tick):
