@@ -12,7 +12,7 @@ WALL_BORDER = 3
 #3d
 D_WALL_HEIGHT = int(WALL_WIDTH/2)
 
-WALLS = json.load(open("walls.json"))
+WALLS = json.load(open("niclale\walls1.json"))
 
 #colors
 BACKGROUND_COLOR = (62, 68, 77)
