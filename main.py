@@ -5,25 +5,9 @@ from constants import *
 import math
 import player
 import walls
+import game as g
 
-# player setup
-player1 = player.Player(3 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "red", 1)
-player2 = player.Player(16 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "blue", 2)
-
-# pygame setup
-pygame.init()
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("gunman and samurai")
-clock = pygame.time.Clock()   
-tick = 0 
-
-bullet_list = player.bullet_list
-
-wall_list = []
-for wall in WALLS:
-    wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
-
+game = g.Game()
 
 
 while True:
@@ -37,28 +21,28 @@ while True:
     keys = pygame.key.get_pressed()
 
     # draw / render
-    screen.fill(BACKGROUND_COLOR)
+    game.screen.fill(BACKGROUND_COLOR)
 
 
     # update
     
     # draw / render1
-    for wall in wall_list:
-        wall.draw(screen)
+    for wall in game.wall_list:
+        wall.draw(game.screen)
 
-    for bullet in bullet_list:
-        bullet.draw(screen)
-        bullet.update(wall_list)
+    for bullet in game.bullet_list:
+        bullet.draw(game.screen)
+        bullet.update(game.wall_list)
 
 
-    player1.update(wall_list, keys, tick)
-    player2.update(wall_list, keys, tick)
+    game.player1.update(game.wall_list, keys, game.tick)
+    game.player2.update(game.wall_list, keys, game.tick)
 
-    player1.draw(screen)
-    player2.draw(screen)
+    game.player1.draw(game.screen)
+    game.player2.draw(game.screen)
 
-    clock.tick(FPS)
+    game.clock.tick(FPS)
 
     
     pygame.display.update()
-    tick += 1
+    game.tick += 1
