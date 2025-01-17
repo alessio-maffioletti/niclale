@@ -112,6 +112,12 @@ class Player:
         self.dash_cooldown = 0
         self.moving = False
 
+        #parry
+        self.parry_cooldown = PARRY_COOLDOWN
+        self.last_parry = 0
+        self.parrying = False
+        self.parry_length = PARRY_LENGTH
+
         # Shooting attributes
         self.shooting_angle = 0
         self.angle_factor = ANGLE_FACTOR
@@ -125,7 +131,11 @@ class Player:
 
         # Draw Player according to player number
         if self.player_num == 1:
+            if self.parrying:
+                pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
+            
             pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+            
         else:
             pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
 
@@ -146,9 +156,13 @@ class Player:
             # Blit the rotated rectangle
             screen.blit(rotated, rotated_rect.topleft)
 
-        
+    def parry(self, tick):
+        print("parry")
+        self.parrying = True
+        self.last_parry = tick
 
-    def move(self, keys):
+
+    def move(self, keys, tick):
 
         if self.key_num == 1:
 
@@ -156,6 +170,13 @@ class Player:
                 if keys[pygame.K_2] and self.dash_cooldown >= 300 and (keys[pygame.K_w] or keys[pygame.K_s] or keys[pygame.K_a] or keys[pygame.K_d]):
                     self.dash_cooldown = 0
                     self.speed = self.dash_speed
+                if keys[pygame.K_1] and tick - self.last_parry > self.parry_cooldown:
+                    self.parry(tick)
+                
+                if self.parrying:
+                    if tick - self.last_parry > self.parry_length:
+                        self.parrying = False
+
 
 
             if keys[pygame.K_w]:
@@ -279,7 +300,7 @@ class Player:
 
 
     def update(self, walls, keys, tick):
-        self.move(keys)
+        self.move(keys, tick)
         self.shoot(keys, tick, self.player_num)
 
         # Collision
