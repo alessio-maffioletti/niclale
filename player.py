@@ -5,8 +5,10 @@ import math
 bullet_list = []
 
 class Bullet:
-    def __init__(self, x, y, angle, num):
-        self.coords = (x,y)
+    def __init__(self, x_pos, y_pos, angle, num):
+        self.x = x_pos
+        self.y = y_pos
+        self.radius = 5
         self.angle = angle
         self.vy = math.sin(math.radians(angle))
         self.vx = math.cos(math.radians(angle))
@@ -14,15 +16,63 @@ class Bullet:
         self.health = 1
         self.damage = 10
         self.num = num
-    
+
     def draw(self, screen):
         if self.num == 1:
-            pygame.draw.circle(screen, "red", self.coords, 5)
+            pygame.draw.circle(screen, "red", (self.x, self.y), self.radius)
         else:
-            pygame.draw.circle(screen, "blue", self.coords, 5)
+            pygame.draw.circle(screen, "blue", (self.x, self.y), self.radius)
 
-    def update(self):
-        self.coords = (self.coords[0] + self.vx * self.speed, self.coords[1] - self.vy * self.speed)
+    def collisions_bullets_walls(self, walls):
+        for wall in walls:
+            # Wall boundaries
+            wall_left = wall.x
+            wall_right = wall.x + WALL_WIDTH
+            wall_top = wall.y
+            wall_bottom = wall.y + WALL_WIDTH
+
+            # Bullet boundaries
+            bullet_left = self.x - self.radius
+            bullet_right = self.x + self.radius
+            bullet_top = self.y - self.radius
+            bullet_bottom = self.y + self.radius
+
+            # Check horizontal collision
+            if bullet_right >= wall_left and bullet_left <= wall_right:
+                if bullet_top <= wall_bottom and bullet_bottom >= wall_top:
+
+                    # Reverse horizontal velocity
+                    self.vx = -self.vx
+
+                    # Adjust position to avoid overlap
+                    if self.x < wall_left:  
+                        self.x = wall_left - self.radius
+                    elif self.x > wall_right:  
+                        self.x = wall_right + self.radius
+                    return  
+
+            # Check vertical collision 
+            if bullet_bottom >= wall_top and bullet_top <= wall_bottom:
+                if bullet_left <= wall_right and bullet_right >= wall_left:
+
+                    # Reverse vertical velocity
+                    self.vy = -self.vy
+
+                    # Adjust position to avoid overlap
+                    if self.y < wall_top:  
+                        self.y = wall_top - self.radius
+                    elif self.y > wall_bottom:  
+                        self.y = wall_bottom + self.radius
+                    return   
+
+    def update(self, walls):
+
+        # Check collisions with walls
+        self.collisions_bullets_walls(walls)
+
+        # Update position
+        self.x = self.x + self.vx * self.speed
+        self.y = self.y - self.vy * self.speed
 
 
 
@@ -186,13 +236,7 @@ class Player:
     def shoot(self, keys, tick, player_num):
 
         if player_num == 2:    
-            # Shooting
-            if keys[pygame.K_l]:
-                if tick - self.last_shot > self.cooldown:
-                    new_bullet = Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle, self.player_num)
-                    bullet_list.append(new_bullet)
-                    self.last_shot = tick
-            
+
             # Change angle
             if keys[pygame.K_k]:
 
@@ -212,7 +256,14 @@ class Player:
                 if tick - self.last_shot > ARROW_WAIT:
                         self.shooting_angle += self.angle_factor
 
-            
+            # Shooting
+            if keys[pygame.K_l]:
+                if tick - self.last_shot > self.cooldown:
+                    new_bullet = Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle, self.player_num)
+                    bullet_list.append(new_bullet)
+                    self.last_shot = tick
+
+
     def update(self, walls, keys, tick):
         self.move(keys)
         self.shoot(keys, tick, self.player_num)

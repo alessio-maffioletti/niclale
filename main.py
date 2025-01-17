@@ -48,7 +48,7 @@ while True:
 
     for bullet in bullet_list:
         bullet.draw(screen)
-        bullet.update()
+        bullet.update(wall_list)
 
 
     player1.update(wall_list, keys, tick)
