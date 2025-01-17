@@ -1,5 +1,7 @@
 import json
 
+FPS = 60
+
 GRID_WIDTH = 30
 
 
@@ -12,7 +14,7 @@ WALL_BORDER = 3
 #3d
 D_WALL_HEIGHT = int(WALL_WIDTH/2)
 
-WALLS = json.load(open("niclale\walls1.json"))
+WALLS = json.load(open("niclale/niclale/walls1.json"))
 
 #colors
 BACKGROUND_COLOR = (62, 68, 77)
@@ -21,5 +23,13 @@ WALL_BORDER_COLOR = (125, 110, 110)
 
 BULLET_SPEED = 2
 BULLET_COOLDOWN = 10
+BULLET_RADIUS = 5
+
+PLAYER_SPEED = 3
+
 
 ARROW_WAIT = 5
+
+ANGLE_FACTOR = 8
+
+DISTANCE_THRESHOLD = 10

@@ -57,7 +57,7 @@ while True:
     player1.draw(screen)
     player2.draw(screen)
 
-    clock.tick(60)
+    clock.tick(FPS)
 
     
     pygame.display.update()

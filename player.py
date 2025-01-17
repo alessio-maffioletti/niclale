@@ -1,6 +1,7 @@
 from constants import *
 import pygame
 import math
+import time
 
 bullet_list = []
 
@@ -8,7 +9,7 @@ class Bullet:
     def __init__(self, x_pos, y_pos, angle, num):
         self.x = x_pos
         self.y = y_pos
-        self.radius = 5
+        self.radius = BULLET_RADIUS
         self.angle = angle
         self.vy = math.sin(math.radians(angle))
         self.vx = math.cos(math.radians(angle))
@@ -41,29 +42,42 @@ class Bullet:
             if bullet_right >= wall_left and bullet_left <= wall_right:
                 if bullet_top <= wall_bottom and bullet_bottom >= wall_top:
 
-                    # Reverse horizontal velocity
-                    self.vx = -self.vx
+                    right_distance = bullet_right - wall_left
+                    left_distance = wall_right - bullet_left    
+                    top_distance = bullet_top - wall_top
+                    bottom_distance = wall_bottom - bullet_bottom
+                    #print("min dist: ",min(right_distance, left_distance, top_distance, bottom_distance))
 
-                    # Adjust position to avoid overlap
-                    if self.x < wall_left:  
-                        self.x = wall_left - self.radius
-                    elif self.x > wall_right:  
-                        self.x = wall_right + self.radius
-                    return  
+                    if abs(left_distance) <= DISTANCE_THRESHOLD or abs(right_distance) <= DISTANCE_THRESHOLD:
+                        #print("HORIZONTAL COLLISION")
+                        # Reverse horizontal velocity
+                        self.vx = -self.vx
+                        
+                        if abs(left_distance) <= DISTANCE_THRESHOLD:
+                            self.x = wall_right + self.radius + self.vx
+                        elif abs(right_distance) <= DISTANCE_THRESHOLD:
+                            self.x = wall_left - self.radius + self.vx
+                        else:
+                            raise Exception("HORIZONTAL COLLISION ERROR")
 
-            # Check vertical collision 
-            if bullet_bottom >= wall_top and bullet_top <= wall_bottom:
-                if bullet_left <= wall_right and bullet_right >= wall_left:
 
-                    # Reverse vertical velocity
-                    self.vy = -self.vy
+                    elif abs(top_distance) <= DISTANCE_THRESHOLD or abs(bottom_distance) <= DISTANCE_THRESHOLD:
+                        #print("VERTICAL COLLISION")
+                        self.vy = -self.vy
 
-                    # Adjust position to avoid overlap
-                    if self.y < wall_top:  
-                        self.y = wall_top - self.radius
-                    elif self.y > wall_bottom:  
-                        self.y = wall_bottom + self.radius
-                    return   
+                        if abs(top_distance) <= DISTANCE_THRESHOLD:
+                            self.y = wall_top - self.radius + self.vy
+                        elif abs(bottom_distance) <= DISTANCE_THRESHOLD:
+                            self.y = wall_bottom + self.radius + self.vy
+                        else:
+                            raise Exception("VERTICAL COLLISION ERROR")
+
+                    else:
+                        raise Exception("COLLISION ERROR")
+
+
+
+
 
     def update(self, walls):
 
@@ -84,9 +98,9 @@ class Player:
         self.y = y
         self.vx = 0
         self.vy = 0
-        self.width = 26
-        self.height = 30
-        self.speed = 3
+        self.width = GRID_WIDTH
+        self.height = GRID_WIDTH
+        self.speed = PLAYER_SPEED
         self.color = color
 
         # Player number
@@ -100,7 +114,7 @@ class Player:
 
         # Shooting attributes
         self.shooting_angle = 0
-        self.angle_factor = 8
+        self.angle_factor = ANGLE_FACTOR
         self.charge_tick = None
 
         self.last_shot = 0
@@ -243,15 +257,15 @@ class Player:
                 if self.shooting_direction == 0:
 
                     if round(self.shooting_angle, 2) <= -90:
-                        self.angle_factor = 8
+                        self.angle_factor = ANGLE_FACTOR
                     if round(self.shooting_angle, 2) >= 90:
-                        self.angle_factor = -8
+                        self.angle_factor = -ANGLE_FACTOR
 
                 else:
                     if round(self.shooting_angle, 2) <= 90:
-                        self.angle_factor = 8
+                        self.angle_factor = ANGLE_FACTOR
                     if round(self.shooting_angle, 2) >= 270:
-                        self.angle_factor = -8
+                        self.angle_factor = -ANGLE_FACTOR
                         
                 if tick - self.last_shot > ARROW_WAIT:
                         self.shooting_angle += self.angle_factor
