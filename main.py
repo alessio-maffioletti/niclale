@@ -10,6 +10,8 @@ import game as g
 game = g.Game()
 
 
+
+
 while True:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -32,7 +34,7 @@ while True:
 
     for bullet in game.bullet_list:
         bullet.draw(game.screen)
-        bullet.update(game.wall_list)
+        bullet.update(game.collision_rectangles)
 
 
     game.player1.update(game.wall_list, keys, game.tick)

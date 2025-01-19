@@ -5,7 +5,8 @@ class Bullet:
     def __init__(self, x_pos, y_pos, angle, num):
         self.x = x_pos
         self.y = y_pos
-        self.radius = BULLET_RADIUS
+        self.width = 10 
+        self.height = 10 
         self.angle = angle
         self.vy = math.sin(math.radians(angle))
         self.vx = math.cos(math.radians(angle))
@@ -16,69 +17,57 @@ class Bullet:
 
     def draw(self, screen):
         if self.num == 1:
-            pygame.draw.circle(screen, "red", (self.x, self.y), self.radius)
+            color = "red"
         else:
-            pygame.draw.circle(screen, "blue", (self.x, self.y), self.radius)
+            color = "blue"
+        
+        # Draw the square
+        pygame.draw.rect(screen, color, (self.x, self.y, self.width, self.height))
 
-    def collisions_bullets_walls(self, walls):
+
+    def collisions_bullets_walls(self, walls, next_x, next_y):
+        # Check horizontal movement
+        new_x = next_x
+        new_y = self.y
+        bullet_rect = pygame.Rect(new_x, new_y, self.width, self.height)
+
         for wall in walls:
-            # Wall boundaries
-            wall_left = wall.x
-            wall_right = wall.x + WALL_WIDTH
-            wall_top = wall.y
-            wall_bottom = wall.y + WALL_WIDTH
+            dummy = pygame.Rect(wall["x"], wall["y"], wall["width"], wall["height"])
+            if bullet_rect.colliderect(dummy):
+                self.vx = -self.vx  
 
-            # Bullet boundaries
-            bullet_left = self.x - self.radius
-            bullet_right = self.x + self.radius
-            bullet_top = self.y - self.radius
-            bullet_bottom = self.y + self.radius
+                # Adjust the bullet's position to be just outside the wall
+                if self.vx > 0:  
+                    self.x = wall["x"] + wall["width"]  
+                elif self.vx < 0:  
+                    self.x = wall["x"] - self.width  
+                break  
 
-            # Check horizontal collision
-            if bullet_right >= wall_left and bullet_left <= wall_right:
-                if bullet_top <= wall_bottom and bullet_bottom >= wall_top:
+        # Check vertical movement
+        new_x = self.x
+        new_y = next_y
+        bullet_rect = pygame.Rect(new_x, new_y, self.width, self.height)
 
-                    right_distance = bullet_right - wall_left
-                    left_distance = wall_right - bullet_left    
-                    top_distance = bullet_top - wall_top
-                    bottom_distance = wall_bottom - bullet_bottom
-                    #print("min dist: ",min(right_distance, left_distance, top_distance, bottom_distance))
+        for wall in walls:
+            dummy = pygame.Rect(wall["x"], wall["y"], wall["width"], wall["height"])
+            if bullet_rect.colliderect(dummy):
+                self.vy = -self.vy  
 
-                    if abs(left_distance) <= DISTANCE_THRESHOLD or abs(right_distance) <= DISTANCE_THRESHOLD:
-                        #print("HORIZONTAL COLLISION")
-                        # Reverse horizontal velocity
-                        self.vx = -self.vx
-                        
-                        if abs(left_distance) <= DISTANCE_THRESHOLD:
-                            self.x = wall_right + self.radius + self.vx
-                        elif abs(right_distance) <= DISTANCE_THRESHOLD:
-                            self.x = wall_left - self.radius + self.vx
-                        else:
-                            raise Exception("HORIZONTAL COLLISION ERROR")
-
-
-                    elif abs(top_distance) <= DISTANCE_THRESHOLD or abs(bottom_distance) <= DISTANCE_THRESHOLD:
-                        #print("VERTICAL COLLISION")
-                        self.vy = -self.vy
-
-                        if abs(top_distance) <= DISTANCE_THRESHOLD:
-                            self.y = wall_top - self.radius + self.vy
-                        elif abs(bottom_distance) <= DISTANCE_THRESHOLD:
-                            self.y = wall_bottom + self.radius + self.vy
-                        else:
-                            raise Exception("VERTICAL COLLISION ERROR")
-
-                    else:
-                        raise Exception("COLLISION ERROR")
-
-
-
-
+                # Adjust the bullet's position to be just outside the wall
+                if self.vy > 0:  
+                    self.y = wall["y"] - self.height  
+                elif self.vy < 0:  
+                    self.y = wall["y"] + wall["height"]  
+                break 
 
     def update(self, walls):
 
+        # Next position
+        next_x = self.x + self.vx * self.speed
+        next_y = self.y - self.vy * self.speed
+
         # Check collisions with walls
-        self.collisions_bullets_walls(walls)
+        self.collisions_bullets_walls(walls, next_x, next_y)
 
         # Update position
         self.x = self.x + self.vx * self.speed
