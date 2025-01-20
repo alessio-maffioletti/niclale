@@ -1,12 +1,13 @@
 import json
+import os
 
 FPS = 60
 
 GRID_WIDTH = 30
+GRID_SIZE = 20
 
-
-WIDTH = GRID_WIDTH * 20
-HEIGHT = GRID_WIDTH * 20
+WIDTH = GRID_WIDTH * GRID_SIZE
+HEIGHT = GRID_WIDTH * GRID_SIZE
 
 # walls
 WALL_WIDTH = GRID_WIDTH
@@ -14,7 +15,13 @@ WALL_BORDER = 3
 #3d
 D_WALL_HEIGHT = int(WALL_WIDTH/2)
 
-WALLS = json.load(open("niclale/niclale/walls1.json"))
+WALLS = json.load(open(os.curdir + "/niclale/walls1.json"))
+textures = os.curdir + "/niclale/textures/"
+
+WALL_TEXTURE = textures + "wall.png"
+FRONT_WALL_TEXTURE = textures + "front_wall.png"
+
+FLOORS = textures + "floor/"
 
 #colors
 BACKGROUND_COLOR = (62, 68, 77)

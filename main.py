@@ -10,8 +10,6 @@ import game as g
 game = g.Game()
 
 
-
-
 while True:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -24,6 +22,8 @@ while True:
 
     # draw / render
     game.screen.fill(BACKGROUND_COLOR)
+
+    game.draw_floor()
 
 
     # update
