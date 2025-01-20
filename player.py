@@ -5,6 +5,10 @@ import time
 import bullet
 import game
 
+def circle_point_collision(x1, y1, r1, x2, y2):
+    if (x1 - x2) ** 2 + (y1 - y2) ** 2 <= r1 ** 2:
+        return True
+    return False
 
 class Player:
     def __init__(self, x, y, color, num, game):
@@ -77,6 +81,22 @@ class Player:
         self.parrying = True
         self.last_parry = tick
 
+        for bullet in self.game.bullet_list:
+            if bullet.num != self.player_num:
+                if circle_point_collision(self.x, self.y, PARRY_RANGE, bullet.x, bullet.y):
+                    print("parry hit")
+                    print(f"Bullet number: {bullet.num}")
+                    if bullet.num == 1:
+                        bullet.num = 2
+                    elif bullet.num == 2:
+                        bullet.num = 1
+                    else:
+                        raise Exception("Invalid bullet number")
+                    
+                    bullet.vy = -bullet.vy
+                    bullet.vx = -bullet.vx
+                
+
 
     def move(self, keys, tick):
 
@@ -86,6 +106,7 @@ class Player:
                 if keys[pygame.K_2] and self.dash_cooldown >= DASH_COOLDOWN and (keys[pygame.K_w] or keys[pygame.K_s] or keys[pygame.K_a] or keys[pygame.K_d]):
                     self.dash_cooldown = 0
                     self.speed = self.dash_speed
+
                 if keys[pygame.K_1] and tick - self.last_parry > self.parry_cooldown:
                     self.parry(tick)
                 
