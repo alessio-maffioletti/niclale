@@ -37,8 +37,8 @@ while True:
         bullet.update(game.collision_rectangles)
 
 
-    game.player1.update(game.wall_list, keys, game.tick)
-    game.player2.update(game.wall_list, keys, game.tick)
+    game.player1.update(game.collision_rectangles, keys, game.tick)
+    game.player2.update(game.collision_rectangles, keys, game.tick)
 
     game.player1.draw(game.screen)
     game.player2.draw(game.screen)

@@ -173,16 +173,17 @@ class Player:
         horizontal_collision = False
         
         for wall in walls:
-            if player_rect.colliderect(wall.get_rect()):
+            dummy = pygame.Rect(wall["x"], wall["y"], wall["width"], wall["height"])
+            if player_rect.colliderect(dummy):
                 if self.vx < 5 and self.vx > -5:
                     horizontal_collision = True
                     break
                 else:
                     # Set the speed to the distance of the wall and the player
                     if self.vx < 0:
-                        self.vx = (wall.x + WALL_WIDTH) - self.x
+                        self.vx = (wall["x"] + wall["width"]) - self.x
                     else:
-                        self.vx = wall.x - (self.x + self.width)
+                        self.vx = wall["x"] - (self.x + self.width)
 
         # Check vertical movement (up/down)
         new_x = self.x
@@ -191,16 +192,17 @@ class Player:
         vertical_collision = False
         
         for wall in walls:
-            if player_rect.colliderect(wall.get_rect()):
+            dummy = pygame.Rect(wall["x"], wall["y"], wall["width"], wall["height"])
+            if player_rect.colliderect(dummy):
                 if self.vy < 5 and self.vy > -5:
                     vertical_collision = True
                     break
                 else:
                     # Set the speed to the distance of the wall and the player
                     if self.vy < 0:
-                        self.vy = (wall.y + WALL_WIDTH) - self.y
+                        self.vy = (wall["y"] + wall["height"]) - self.y
                     else:
-                        self.vy = wall.y - (self.y + self.height)
+                        self.vy = wall["y"] - (self.y + self.height)
 
         return horizontal_collision, vertical_collision
     
