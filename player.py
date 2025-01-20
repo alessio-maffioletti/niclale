@@ -23,7 +23,7 @@ class Player:
         self.speed = PLAYER_SPEED
         self.color = color
 
-        self.health = 5
+        self.health = 10
 
         # Player number
         self.player_num = num       
@@ -84,7 +84,7 @@ class Player:
         self.last_parry = tick
 
         for bullet in self.game.bullet_list:
-            if bullet.num != self.player_num:
+            if bullet.num != self.key_num:
                 if circle_point_collision(self.x, self.y, PARRY_RANGE, bullet.x, bullet.y):
                     print("parry hit")
                     print(f"Bullet number: {bullet.num}")
@@ -120,42 +120,83 @@ class Player:
 
             if keys[pygame.K_w]:
                 self.vy = -self.speed
-                self.moving
+                if self.player_num == 1:
+                    self.moving = True
             elif keys[pygame.K_s]:
                 self.vy = self.speed
-                self.moving = True
+                if self.player_num == 1:
+                    self.moving = True
             else:
                 self.vy = 0
                 self.moving = False
 
             if keys[pygame.K_a]:
                 self.vx = -self.speed
-                self.moving = True
+                if self.player_num == 1:
+                    self.moving = True
+                if self.player_num == 2:
+                    if self.shooting_direction == 0:
+                        self.shooting_angle += 2 * (abs(self.shooting_angle - 90))
+                    self.shooting_direction = 1
             elif keys[pygame.K_d]:
                 self.vx = self.speed
-                self.moving = True
+                if self.player_num == 1:
+                    self.moving = True
+                if self.player_num == 2:
+                    if self.shooting_direction == 1:
+                        self.shooting_angle -= 2 * (abs(self.shooting_angle - 90))
+                    self.shooting_direction = 0
             else:
                 self.vx = 0
                 self.moving = False
+
+
+
             
         elif self.key_num == 2:
+
+
+            if self.player_num == 1:
+                if keys[pygame.K_l] and self.dash_cooldown >= DASH_COOLDOWN and (keys[pygame.K_UP] or keys[pygame.K_DOWN] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]):
+                    self.dash_cooldown = 0
+                    self.speed = self.dash_speed
+
+                if keys[pygame.K_k] and tick - self.last_parry > self.parry_cooldown:
+                    self.parry(tick)
+                
+                if self.parrying:
+                    if tick - self.last_parry > self.parry_length:
+                        self.parrying = False
+
+
             if keys[pygame.K_UP]:
                 self.vy = -self.speed
+                if self.player_num == 1:
+                    self.moving = True
             elif keys[pygame.K_DOWN]:
                 self.vy = self.speed
+                if self.player_num == 1:
+                    self.moving = True
             else:
                 self.vy = 0
+                self.moving = False
 
             if keys[pygame.K_LEFT]:
                 self.vx = -self.speed
-                if self.shooting_direction == 0:
-                    self.shooting_angle += 2 * (abs(self.shooting_angle - 90))
-                self.shooting_direction = 1
+                if self.player_num == 1:
+                    self.moving = True
+                if self.player_num == 2:
+                    if self.shooting_direction == 0:
+                        self.shooting_angle += 2 * (abs(self.shooting_angle - 90))
+                    self.shooting_direction = 1
             elif keys[pygame.K_RIGHT]:
                 self.vx = self.speed
-                if self.shooting_direction == 1:
-                    self.shooting_angle -= 2 * (abs(self.shooting_angle - 90))
-                self.shooting_direction = 0
+                if self.player_num == 1:
+                    self.moving = True
+                if self.player_num == 2:
+                    if self.shooting_direction == 1:
+                        self.shooting_angle -= 2 * (abs(self.shooting_angle - 90))
+                    self.shooting_direction = 0
             else:
                 self.vx = 0
 
@@ -209,40 +250,71 @@ class Player:
         return horizontal_collision, vertical_collision
     
 
-    def shoot(self, keys, tick, player_num):
+    def collision_with_bullets(self):
+        rem_bullets = []
+        for n, bullet in enumerate(self.game.bullet_list):
+            if bullet.num != self.key_num:
+                player_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+                bullet_rect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.height)
+                if player_rect.colliderect(bullet_rect):
+                    print("hit")
+                    self.health -= bullet.damage
+                    bullet.health = 0
+                    rem_bullets.append(n)
+                    print(f"Player {self.key_num} health: {self.health}")
+
+                    # Check for change
+                    if (self.game.player1.health + self.game.player2.health) % 2 == 0:
+                        dummy = self.game.player1.player_num
+                        self.game.player1.player_num = self.game.player2.player_num
+                        self.game.player2.player_num = dummy
+
+        self.game.bullet_list = [bullet for n, bullet in enumerate(self.game.bullet_list) if n not in rem_bullets]
+
+    def shoot(self, keys, tick, player_num, key_num):
+
+        def change_angle():
+            if self.shooting_direction == 0:
+
+                if round(self.shooting_angle, 2) <= -90:
+                    self.angle_factor = ANGLE_FACTOR
+                if round(self.shooting_angle, 2) >= 90:
+                    self.angle_factor = -ANGLE_FACTOR
+
+            else:
+                if round(self.shooting_angle, 2) <= 90:
+                    self.angle_factor = ANGLE_FACTOR
+                if round(self.shooting_angle, 2) >= 270:
+                    self.angle_factor = -ANGLE_FACTOR
+                    
+            if tick - self.last_shot > ARROW_WAIT:
+                    self.shooting_angle += self.angle_factor
+
+
+        def shooting():
+            if tick - self.last_shot > self.cooldown:
+                new_bullet = bullet.Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle, self.key_num)
+                self.game.bullet_list.append(new_bullet)
+                self.last_shot = tick
+
 
         if player_num == 2:    
+            if key_num == 1:
+                if keys[pygame.K_2]:
+                    change_angle()
+                if keys[pygame.K_1]:
+                    shooting()
 
-            # Change angle
-            if keys[pygame.K_k]:
-
-                if self.shooting_direction == 0:
-
-                    if round(self.shooting_angle, 2) <= -90:
-                        self.angle_factor = ANGLE_FACTOR
-                    if round(self.shooting_angle, 2) >= 90:
-                        self.angle_factor = -ANGLE_FACTOR
-
-                else:
-                    if round(self.shooting_angle, 2) <= 90:
-                        self.angle_factor = ANGLE_FACTOR
-                    if round(self.shooting_angle, 2) >= 270:
-                        self.angle_factor = -ANGLE_FACTOR
-                        
-                if tick - self.last_shot > ARROW_WAIT:
-                        self.shooting_angle += self.angle_factor
-
-            # Shooting
-            if keys[pygame.K_l]:
-                if tick - self.last_shot > self.cooldown:
-                    new_bullet = bullet.Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle, self.player_num)
-                    self.game.bullet_list.append(new_bullet)
-                    self.last_shot = tick
-
+            else:
+                if keys[pygame.K_k]:
+                    change_angle()
+                if keys[pygame.K_l]:
+                    shooting()
+                
 
     def update(self, walls, keys, tick):
         self.move(keys, tick)
-        self.shoot(keys, tick, self.player_num)
+        self.shoot(keys, tick, self.player_num, self.key_num)
 
         # Collision
         horizontal_collision, vertical_collision = self.collision_check_with_walls(walls)
@@ -252,21 +324,7 @@ class Player:
         if not vertical_collision:
             self.y += self.vy
 
-        # Collision with bullets
-        rem_bullets = []
-        for n, bullet in enumerate(self.game.bullet_list):
-            if bullet.num != self.player_num:
-                player_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-                bullet_rect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.height)
-                if player_rect.colliderect(bullet_rect):
-                    print("hit")
-                    self.health -= bullet.damage
-                    bullet.health = 0
-                    rem_bullets.append(n)
-                    print(f"Player {self.player_num} health: {self.health}")
-
-        self.game.bullet_list = [bullet for n, bullet in enumerate(self.game.bullet_list) if n not in rem_bullets]
-
+        self.collision_with_bullets()
 
         self.dash_cooldown += 1
 
