@@ -23,6 +23,8 @@ class Player:
         self.speed = PLAYER_SPEED
         self.color = color
 
+        self.health = 5
+
         # Player number
         self.player_num = num       
         self.key_num = num
@@ -249,6 +251,22 @@ class Player:
 
         if not vertical_collision:
             self.y += self.vy
+
+        # Collision with bullets
+        rem_bullets = []
+        for n, bullet in enumerate(self.game.bullet_list):
+            if bullet.num != self.player_num:
+                player_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+                bullet_rect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.height)
+                if player_rect.colliderect(bullet_rect):
+                    print("hit")
+                    self.health -= bullet.damage
+                    bullet.health = 0
+                    rem_bullets.append(n)
+                    print(f"Player {self.player_num} health: {self.health}")
+
+        self.game.bullet_list = [bullet for n, bullet in enumerate(self.game.bullet_list) if n not in rem_bullets]
+
 
         self.dash_cooldown += 1
 

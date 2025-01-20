@@ -12,7 +12,7 @@ class Bullet:
         self.vx = math.cos(math.radians(angle))
         self.speed = BULLET_SPEED
         self.health = 1
-        self.damage = 10
+        self.damage = 1
         self.num = num
 
     def draw(self, screen):
