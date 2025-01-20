@@ -23,7 +23,7 @@ class Player:
         self.speed = PLAYER_SPEED
         self.color = color
 
-        self.health = 10
+        self.health = 5
 
         # Player number
         self.player_num = num       
@@ -206,7 +206,7 @@ class Player:
             self.vy /= math.sqrt(2)
 
 
-        self.speed = 3
+        self.speed = PLAYER_SPEED
             
     def collision_check_with_walls(self, walls):
         # Check horizontal movement 
