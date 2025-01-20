@@ -14,7 +14,7 @@ WALL_BORDER = 3
 #3d
 D_WALL_HEIGHT = int(WALL_WIDTH/2)
 
-WALLS = json.load(open("niclale/walls1.json"))
+WALLS = json.load(open("niclale/niclale/walls1.json"))
 
 #colors
 BACKGROUND_COLOR = (62, 68, 77)
@@ -28,6 +28,7 @@ BULLET_RADIUS = 5
 PLAYER_SPEED = 3
 PLAYER_HEIGHT = 30
 PLAYER_WIDTH = 26
+PLAYER_MAX_HEALTH = 5
 
 PARRY_COOLDOWN = 20
 PARRY_LENGTH = 10
