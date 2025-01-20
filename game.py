@@ -51,4 +51,4 @@ class Game:
         for w in range(GRID_SIZE):
             for h in range(GRID_SIZE):
                 texture = self.floor_texture_list[w + h * GRID_SIZE]
-                self.screen.blit(texture, (w * GRID_WIDTH, h * GRID_WIDTH))
+                self.screen.blit(texture, (w * GRID_WIDTH, h * GRID_WIDTH + 20))
