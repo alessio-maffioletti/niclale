@@ -46,6 +46,8 @@ class Game:
         self.wall_list = []
         for wall in WALLS:
             self.wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
+        #SORT WALLS
+        self.wall_list.sort(key=lambda wall: wall.x, reverse=False)
 
         
     def draw_floor(self):
