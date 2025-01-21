@@ -13,7 +13,7 @@ HEIGHT = GRID_WIDTH * GRID_SIZE
 WALL_WIDTH = GRID_WIDTH
 WALL_BORDER = 3
 #3d
-D_WALL_HEIGHT = int(WALL_WIDTH/2)
+D_WALL_HEIGHT = 20 #int(WALL_WIDTH/2)
 
 WALLS = json.load(open(os.curdir + "/niclale/walls1.json"))
 textures = os.curdir + "/niclale/textures/"
@@ -22,6 +22,12 @@ WALL_TEXTURE = textures + "wall.png"
 FRONT_WALL_TEXTURE = textures + "front_wall.png"
 
 FLOORS = textures + "floor/"
+
+F_CORNER_1 = FLOORS + "corner_1.png"
+F_CORNER_2 = FLOORS + "corner_2.png"
+F_CORNER_3 = FLOORS + "corner_3.png"
+F_FULL_1 = FLOORS + "full_1.png"
+F_FULL_2 = FLOORS + "full_2.png"
 
 #colors
 BACKGROUND_COLOR = (62, 68, 77)
