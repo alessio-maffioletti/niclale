@@ -7,16 +7,12 @@ import collision_rects
 import random
 import os
 
-def get_textures(dir):
-    texture_list = []
-    for image in os.listdir(dir):
-        texture_list.append(pygame.image.load(dir + image))
-    return texture_list
-
-def create_texture_list(textures, length):
+def create_texture_list(texture_prob_dict, length):
     texture_list = []
     for i in range(length):
-        texture_list.append(random.choice(textures))
+        texture = random.choices(list(texture_prob_dict.keys()), weights=list(texture_prob_dict.values()), k=1)[0]
+        image = pygame.image.load(texture)
+        texture_list.append(image)
     return texture_list
 
 def create_available_coordinates(data):
@@ -28,9 +24,14 @@ def create_available_coordinates(data):
 class Game:
     def __init__(self):
         #floor textures
-        floor_texture_dir = FLOORS
-        floor_textures_pure = get_textures(floor_texture_dir)
-        self.floor_texture_list = create_texture_list(floor_textures_pure, GRID_SIZE * GRID_SIZE)
+        self.texture_probabilities = {
+            F_CORNER_1: 0.2/4,
+            F_CORNER_2: 0.2/4,
+            F_CORNER_3: 0.2/4,
+            F_FULL_1: 0.2/4,
+            F_FULL_2: 0.8
+        }
+        self.floor_texture_list = create_texture_list(self.texture_probabilities, GRID_SIZE * GRID_SIZE)
 
         #shuffle list
         # player setup
@@ -53,6 +54,8 @@ class Game:
         self.wall_list = []
         for wall in WALLS:
             self.wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
+        #SORT WALLS
+        self.wall_list.sort(key=lambda wall: wall.x, reverse=False)
 
         self.available_coordinates = create_available_coordinates(WALLS)
 
@@ -61,4 +64,4 @@ class Game:
         for w in range(GRID_SIZE):
             for h in range(GRID_SIZE):
                 texture = self.floor_texture_list[w + h * GRID_SIZE]
-                self.screen.blit(texture, (w * GRID_WIDTH, h * GRID_WIDTH + 20))
+                self.screen.blit(texture, (w * GRID_WIDTH, h * GRID_WIDTH + D_WALL_HEIGHT))
