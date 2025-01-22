@@ -211,7 +211,13 @@ class Player:
 
     def collision_with_powerups(self, powerups):
         for powerup in powerups:
-            if circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x + self.width // 2, self.y + self.height // 2):
+            if circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x, self.y):
+                return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x + self.width, self.y):
+                return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x + self.width, self.y + self.height):
+                return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x, self.y + self.height):
                 return powerup
 
         return None
@@ -220,7 +226,13 @@ class Player:
         if powerup is not None:
             powerup.health -= 1
             if powerup.num == 1:
-                self.health += 10
+                powerup.power_1(self.key_num)
+
+            elif powerup.num == 2:
+                powerup.power_2(self.key_num)
+
+
+                
     def collision_check_with_walls(self, walls):
         # Check horizontal movement 
         new_x = self.x + self.vx

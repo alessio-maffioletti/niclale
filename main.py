@@ -14,10 +14,10 @@ def create_power_up():
     if len(game.power_up_list) < 2 and game.tick % 100 == 0:
         random_x, random_y = random.choice(game.available_coordinates)
 
-        type = 1
+        type = random.randint(1, 2)
 
         game.power_up_list.append(power_up.PowerUP(random_x * GRID_WIDTH + 15, random_y * GRID_WIDTH + 5, type, game.tick, game))
-        print(f"List length: {len(game.power_up_list)}")
+        
 
 while True:
     # poll for events
@@ -40,6 +40,9 @@ while True:
     # update
     
     # draw / render1
+    for p in game.power_up_list:
+        p.draw(game.screen)
+        p.update(game.tick)
     
     for wall in game.wall_list:
         wall.draw(game.screen)
@@ -47,10 +50,6 @@ while True:
     for bullet in game.bullet_list:
         bullet.draw(game.screen)
         bullet.update(game.collision_rectangles)
-
-    for p in game.power_up_list:
-        p.draw(game.screen)
-        p.update(game.tick)
 
 
 
