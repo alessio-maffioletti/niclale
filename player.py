@@ -219,6 +219,8 @@ class Player:
                 return powerup
             elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x, self.y + self.height):
                 return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x + self.width // 2, self.y + self.height // 2):
+                return powerup
 
         return None
             
