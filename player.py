@@ -72,28 +72,33 @@ class Player:
             surface = pygame.transform.flip(surface, True, False)
         screen.blit(surface, (x+PLAYER_OFFSET_X, y+PLAYER_OFFSET_Y))
         return animation_index, animation_tick
+    
+    def draw_character(self, screen, tick):
+        if self.moving:
+            if self.vx < 0:
+                self.flipped = True
+            elif self.vx > 0:
+                self.flipped = False
+            elif self.vx == 0:
+                pass
+            else:
+                raise Exception("Something went wrong with self.vx, its value is: " + self.vx)
+            
+            self.walk_animation_index, self.walk_animation_tick = self.draw_animation(screen, self.walk_animations, self.walk_animation_index, self.walk_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
+        elif not self.moving:
+            self.idle_animation_index, self.idle_animation_tick = self.draw_animation(screen, self.idle_animations, self.idle_animation_index, self.idle_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
+        else:
+            raise Exception("Something went wrong with self.moving, its value is: " + self.moving)
     def draw(self, screen, tick):
-
+        self.draw_character(screen, tick)
         # Draw Player according to player number
         if self.player_num == 1:
             if self.parrying:
                 pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
             
-            pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+            #pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
             
         else:
-            if self.moving:
-                #check if vx is negative
-                if self.vx < 0:
-                    self.flipped = True
-                elif self.vx > 0:
-                    self.flipped = False
-                
-                self.walk_animation_index, self.walk_animation_tick = self.draw_animation(screen, self.walk_animations, self.walk_animation_index, self.walk_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
-            elif not self.moving:
-                self.idle_animation_index, self.idle_animation_tick = self.draw_animation(screen, self.idle_animations, self.idle_animation_index, self.idle_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
-            else:
-                raise Exception("Something went wrong with self.moving, its value is: " + self.moving)
             #pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
 
             # Create rectangle surface
@@ -183,7 +188,7 @@ class Player:
                     self.shooting_direction = 0
             else:
                 self.vx = 0
-                self.moving = False
+                #self.moving = False
 
 
 
@@ -356,6 +361,8 @@ class Player:
         def shooting():
             if tick - self.last_shot > self.cooldown:
                 new_bullet = bullet.Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle, self.key_num)
+                new_bullet.x = new_bullet.x + math.cos(math.radians(self.shooting_angle)) * BULLET_SHOOT_OFFSET
+                new_bullet.y = new_bullet.y - math.sin(math.radians(self.shooting_angle)) * BULLET_SHOOT_OFFSET
                 self.game.bullet_list.append(new_bullet)
                 self.last_shot = tick
 
