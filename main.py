@@ -6,9 +6,18 @@ import math
 import player
 import walls
 import game as g
+import power_up
 
 game = g.Game()
 
+def create_power_up():
+    if len(game.power_up_list) < 2 and game.tick % 100 == 0:
+        random_x, random_y = random.choice(game.available_coordinates)
+
+        type = random.randint(1, 2)
+
+        game.power_up_list.append(power_up.PowerUP(random_x * GRID_WIDTH + 15, random_y * GRID_WIDTH + 5, type, game.tick, game))
+        
 
 while True:
     # poll for events
@@ -25,16 +34,23 @@ while True:
 
     game.draw_floor()
 
+    create_power_up()
+
 
     # update
     
     # draw / render1
+    for p in game.power_up_list:
+        p.draw(game.screen)
+        p.update(game.tick)
+    
     for wall in game.wall_list:
         wall.draw(game.screen)
 
     for bullet in game.bullet_list:
         bullet.draw(game.screen)
         bullet.update(game.collision_rectangles)
+
 
 
     game.player1.update(game.collision_rectangles, keys, game.tick)

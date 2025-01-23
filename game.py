@@ -15,6 +15,12 @@ def create_texture_list(texture_prob_dict, length):
         texture_list.append(image)
     return texture_list
 
+def create_available_coordinates(data):
+    all_coordinates = [[x, y] for x in range(1, GRID_SIZE - 1) for y in range(2, GRID_SIZE - 1)]
+    used_coordinates = [wall[0] for wall in data]
+    available_coordinates = [coords for coords in all_coordinates if coords not in used_coordinates]
+    return available_coordinates
+
 class Game:
     def __init__(self):
         #floor textures
@@ -41,6 +47,8 @@ class Game:
         self.clock = pygame.time.Clock()   
         self.tick = 0 
 
+        self.power_up_list = []
+
         self.bullet_list = []
 
         self.wall_list = []
@@ -48,6 +56,8 @@ class Game:
             self.wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
         #SORT WALLS
         self.wall_list.sort(key=lambda wall: wall.x, reverse=False)
+
+        self.available_coordinates = create_available_coordinates(WALLS)
 
         
     def draw_floor(self):

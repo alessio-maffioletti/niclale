@@ -85,7 +85,7 @@ class Player:
 
         for bullet in self.game.bullet_list:
             if bullet.num != self.key_num:
-                if circle_point_collision(self.x, self.y, PARRY_RANGE, bullet.x, bullet.y):
+                if circle_point_collision(self.x, self.y, PARRY_RANGE, bullet.x + bullet.width // 2, bullet.y + bullet.height // 2):
                     print("parry hit")
                     print(f"Bullet number: {bullet.num}")
                     if bullet.num == 1:
@@ -207,7 +207,34 @@ class Player:
 
 
         self.speed = PLAYER_SPEED
+
+
+    def collision_with_powerups(self, powerups):
+        for powerup in powerups:
+            if circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x, self.y):
+                return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x + self.width, self.y):
+                return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x + self.width, self.y + self.height):
+                return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x, self.y + self.height):
+                return powerup
+            elif circle_point_collision(powerup.x, powerup.y, powerup.radius, self.x + self.width // 2, self.y + self.height // 2):
+                return powerup
+
+        return None
             
+    def powerup_effects(self, powerup):
+        if powerup is not None:
+            powerup.health -= 1
+            if powerup.num == 1:
+                powerup.power_1(self.key_num)
+
+            elif powerup.num == 2:
+                powerup.power_2(self.key_num)
+
+
+                
     def collision_check_with_walls(self, walls):
         # Check horizontal movement 
         new_x = self.x + self.vx
@@ -325,6 +352,8 @@ class Player:
             self.y += self.vy
 
         self.collision_with_bullets()
+
+        self.powerup_effects(self.collision_with_powerups(self.game.power_up_list))
 
         self.dash_cooldown += 1
 
