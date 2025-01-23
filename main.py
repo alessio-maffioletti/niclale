@@ -51,6 +51,9 @@ while True:
         bullet.draw(game.screen)
         bullet.update(game.collision_rectangles)
 
+        if bullet.health <= 0:
+            game.bullet_list.remove(bullet)
+
 
 
     game.player1.update(game.collision_rectangles, keys, game.tick)

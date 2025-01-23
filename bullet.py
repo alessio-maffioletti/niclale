@@ -1,6 +1,7 @@
 from constants import *
 import pygame
 import math
+
 class Bullet:
     def __init__(self, x_pos, y_pos, angle, num):
         self.x = x_pos
@@ -72,3 +73,28 @@ class Bullet:
         # Update position
         self.x = self.x + self.vx * self.speed
         self.y = self.y - self.vy * self.speed
+
+
+class homing_bullet(Bullet):
+    def __init__(self, x_pos, y_pos, angle, num, opponent):
+        super().__init__(x_pos, y_pos, angle, num)
+        self.opponent = opponent
+        self.speed = HOMING_BULLET_SPEED
+        self.width = 13
+        self.height = 13
+    def collisions_bullets_walls(self, walls, next_x, next_y):
+        new_x = next_x
+        new_y = next_y
+        bullet_rect = pygame.Rect(new_x, new_y, self.width, self.height)
+        for wall in walls:
+            dummy = pygame.Rect(wall["x"], wall["y"], wall["width"], wall["height"])
+            if bullet_rect.colliderect(dummy):
+                self.health = 0
+
+    def update(self, walls):
+        #adjust angle to point to opponent
+        shooting_angle = math.degrees(math.atan2(self.y - self.opponent.y, self.opponent.x - self.x))
+        self.vx = math.cos(math.radians(shooting_angle))
+        self.vy = math.sin(math.radians(shooting_angle))
+        
+        return super().update(walls)

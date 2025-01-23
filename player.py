@@ -87,10 +87,13 @@ class Player:
         self.shooting_angle = 0
         self.angle_factor = ANGLE_FACTOR
         self.charge_tick = None
-
+        #normal bullet
         self.last_shot = 0
         self.cooldown = BULLET_COOLDOWN
         self.shooting_direction = 0
+        #homing bullet
+        self.homing_last_shot = 0
+        self.homing_cooldown = HOMING_BULLET_COOLDOWN
 
         # textures and animations
         self.blue_gunman = character(BLUE_GUNMAN_TEXTURES)
@@ -373,26 +376,54 @@ class Player:
             if tick - self.last_shot > ARROW_WAIT:
                     self.shooting_angle += self.angle_factor
 
+        def point_to_opponent(self):
+            if self == self.game.player1:
+                opponent = self.game.player2
+            elif self == self.game.player2:
+                opponent = self.game.player1
+            else:
+                raise Exception("Player not found")
+
+            self.shooting_angle = math.degrees(math.atan2(self.y - opponent.y, opponent.x - self.x))
 
         def shooting():
             if tick - self.last_shot > self.cooldown:
                 new_bullet = bullet.Bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle, self.key_num)
+                #add bullet offset
                 new_bullet.x = new_bullet.x + math.cos(math.radians(self.shooting_angle)) * BULLET_SHOOT_OFFSET
                 new_bullet.y = new_bullet.y - math.sin(math.radians(self.shooting_angle)) * BULLET_SHOOT_OFFSET
+
                 self.game.bullet_list.append(new_bullet)
                 self.last_shot = tick
+        def shoot_homing(self):
+            if self == self.game.player1:
+                opponent = self.game.player2
+            elif self == self.game.player2:
+                opponent = self.game.player1
+            else:
+                raise Exception("Player not found")
+            
+            if tick - self.homing_last_shot > self.homing_cooldown:
+                new_bullet = bullet.homing_bullet(self.x + self.width // 2, self.y + self.height //2, self.shooting_angle, self.key_num, opponent)
+                #add bullet offset
+                new_bullet.x = new_bullet.x + math.cos(math.radians(self.shooting_angle)) * BULLET_SHOOT_OFFSET
+                new_bullet.y = new_bullet.y - math.sin(math.radians(self.shooting_angle)) * BULLET_SHOOT_OFFSET
 
+                self.game.bullet_list.append(new_bullet)
+                self.homing_last_shot = tick
 
         if player_num == 2:    
             if key_num == 1:
+                point_to_opponent(self)
                 if keys[pygame.K_2]:
-                    change_angle()
+                    shoot_homing(self)
                 if keys[pygame.K_1]:
                     shooting()
 
             else:
+                point_to_opponent(self)
                 if keys[pygame.K_k]:
-                    change_angle()
+                    shoot_homing(self)
                 if keys[pygame.K_l]:
                     shooting()
                 
