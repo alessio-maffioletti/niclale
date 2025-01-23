@@ -101,6 +101,8 @@ class Player:
 
     def draw(self, screen, tick):
         # Draw Player according to player number
+        #draw player shadow
+        pygame.draw.ellipse(screen, "black", (self.x + PLAYER_SHADOW_OFFSET_X, self.y + PLAYER_SHADOW_OFFSET_Y, PLAYER_SHADOW_RADIUS_X, PLAYER_SHADOW_RADIUS_Y))        
         if self.player_num == 1:
             if self.parrying:
                 pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
