@@ -56,8 +56,8 @@ while True:
     game.player1.update(game.collision_rectangles, keys, game.tick)
     game.player2.update(game.collision_rectangles, keys, game.tick)
 
-    game.player1.draw(game.screen)
-    game.player2.draw(game.screen)
+    game.player1.draw(game.screen, game.tick)
+    game.player2.draw(game.screen, game.tick)
 
     game.clock.tick(FPS)
 

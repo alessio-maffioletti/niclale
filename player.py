@@ -49,7 +49,26 @@ class Player:
         self.cooldown = BULLET_COOLDOWN
         self.shooting_direction = 0
 
-    def draw(self, screen):
+        # textures and animations
+        self.load_animations()
+
+    def load_animations(self):
+        gunman_list = [pygame.image.load(CHARACTER_TEXTURES + image) for image in os.listdir(CHARACTER_TEXTURES) if image.endswith(".png")]
+        self.animations = gunman_list
+        self.animation_index = 0
+        self.animation_tick = 0
+
+    def draw_animation(self, screen, animation_list, animation_index, animation_tick, current_tick, animation_speed, x,y,w,h):
+        if current_tick - animation_tick >= animation_speed:
+            animation_tick = current_tick
+            animation_index += 1
+            if animation_index >= len(animation_list):
+                animation_index = 0
+        surface = animation_list[animation_index]
+        surface = pygame.transform.scale(surface, (w, h))
+        screen.blit(surface, (x, y))
+        return animation_index, animation_tick
+    def draw(self, screen, tick):
 
         # Draw Player according to player number
         if self.player_num == 1:
@@ -59,7 +78,8 @@ class Player:
             pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
             
         else:
-            pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+            self.animation_index, self.animation_tick = self.draw_animation(screen, self.animations, self.animation_index, self.animation_tick, tick, ANIMATION_SPEED, self.x, self.y, self.width, self.height)
+            #pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
 
             # Create rectangle surface
             surface = pygame.Surface((80, 3), pygame.SRCALPHA)
