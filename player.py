@@ -18,8 +18,8 @@ class Player:
         self.y = y
         self.vx = 0
         self.vy = 0
-        self.width = PLAYER_WIDTH
-        self.height = PLAYER_HEIGHT
+        self.width = PLAYER_HITBOX_X
+        self.height = PLAYER_HITBOX_Y
         self.speed = PLAYER_SPEED
         self.color = color
 
@@ -50,15 +50,17 @@ class Player:
         self.shooting_direction = 0
 
         # textures and animations
-        self.load_animations()
+        self.idle_animations, self.idle_animation_index, self.idle_animation_tick = self.load_animations(GUNMAN_IDLE)
+        self.walk_animations, self.walk_animation_index, self.walk_animation_tick = self.load_animations(GUNMAN_WALK)
+        self.flipped = False
 
-    def load_animations(self):
-        gunman_list = [pygame.image.load(CHARACTER_TEXTURES + image) for image in os.listdir(CHARACTER_TEXTURES) if image.endswith(".png")]
-        self.animations = gunman_list
-        self.animation_index = 0
-        self.animation_tick = 0
+    def load_animations(self, animation_folder):
+        animation_list = [pygame.image.load(animation_folder + image) for image in os.listdir(animation_folder) if image.endswith(".png")]
+        animation_index = 0
+        animation_tick = 0
+        return animation_list, animation_index, animation_tick
 
-    def draw_animation(self, screen, animation_list, animation_index, animation_tick, current_tick, animation_speed, x,y,w,h):
+    def draw_animation(self, screen, animation_list, animation_index, animation_tick, current_tick, animation_speed, x,y,w,h, flipped=False):
         if current_tick - animation_tick >= animation_speed:
             animation_tick = current_tick
             animation_index += 1
@@ -66,7 +68,9 @@ class Player:
                 animation_index = 0
         surface = animation_list[animation_index]
         surface = pygame.transform.scale(surface, (w, h))
-        screen.blit(surface, (x, y))
+        if flipped:
+            surface = pygame.transform.flip(surface, True, False)
+        screen.blit(surface, (x+PLAYER_OFFSET_X, y+PLAYER_OFFSET_Y))
         return animation_index, animation_tick
     def draw(self, screen, tick):
 
@@ -78,7 +82,18 @@ class Player:
             pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
             
         else:
-            self.animation_index, self.animation_tick = self.draw_animation(screen, self.animations, self.animation_index, self.animation_tick, tick, ANIMATION_SPEED, self.x, self.y, self.width, self.height)
+            if self.moving:
+                #check if vx is negative
+                if self.vx < 0:
+                    self.flipped = True
+                elif self.vx > 0:
+                    self.flipped = False
+                
+                self.walk_animation_index, self.walk_animation_tick = self.draw_animation(screen, self.walk_animations, self.walk_animation_index, self.walk_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
+            elif not self.moving:
+                self.idle_animation_index, self.idle_animation_tick = self.draw_animation(screen, self.idle_animations, self.idle_animation_index, self.idle_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
+            else:
+                raise Exception("Something went wrong with self.moving, its value is: " + self.moving)
             #pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
 
             # Create rectangle surface
@@ -140,28 +155,28 @@ class Player:
 
             if keys[pygame.K_w]:
                 self.vy = -self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
             elif keys[pygame.K_s]:
                 self.vy = self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
             else:
                 self.vy = 0
                 self.moving = False
 
             if keys[pygame.K_a]:
                 self.vx = -self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
                 if self.player_num == 2:
                     if self.shooting_direction == 0:
                         self.shooting_angle += 2 * (abs(self.shooting_angle - 90))
                     self.shooting_direction = 1
             elif keys[pygame.K_d]:
                 self.vx = self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
                 if self.player_num == 2:
                     if self.shooting_direction == 1:
                         self.shooting_angle -= 2 * (abs(self.shooting_angle - 90))
@@ -191,28 +206,28 @@ class Player:
 
             if keys[pygame.K_UP]:
                 self.vy = -self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
             elif keys[pygame.K_DOWN]:
                 self.vy = self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
             else:
                 self.vy = 0
                 self.moving = False
 
             if keys[pygame.K_LEFT]:
                 self.vx = -self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
                 if self.player_num == 2:
                     if self.shooting_direction == 0:
                         self.shooting_angle += 2 * (abs(self.shooting_angle - 90))
                     self.shooting_direction = 1
             elif keys[pygame.K_RIGHT]:
                 self.vx = self.speed
-                if self.player_num == 1:
-                    self.moving = True
+                #if self.player_num == 1:
+                self.moving = True
                 if self.player_num == 2:
                     if self.shooting_direction == 1:
                         self.shooting_angle -= 2 * (abs(self.shooting_angle - 90))
