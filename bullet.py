@@ -6,8 +6,8 @@ class Bullet:
     def __init__(self, x_pos, y_pos, angle, num):
         self.x = x_pos
         self.y = y_pos
-        self.width = 10 
-        self.height = 10 
+        self.width = BULLET_WIDTH
+        self.height = BULLET_HEIGHT
         self.angle = angle
         self.vy = math.sin(math.radians(angle))
         self.vx = math.cos(math.radians(angle))
@@ -16,14 +16,24 @@ class Bullet:
         self.damage = 1
         self.num = num
 
+        self.red_texture = pygame.image.load(RED_BULLET_TEXTURE_FOLDER + BULLET_TEXTURE_NAME)
+        self.blue_texture = pygame.image.load(BLUE_BULLET_TEXTURE_FOLDER + BULLET_TEXTURE_NAME)
+
     def draw(self, screen):
         if self.num == 1:
             color = "red"
+            texture = self.red_texture
         else:
             color = "blue"
+            texture = self.blue_texture
         
         # Draw the square
-        pygame.draw.rect(screen, color, (self.x, self.y, self.width, self.height))
+        #pygame.draw.rect(screen, color, (self.x, self.y, self.width, self.height))
+        scaled_texture = pygame.transform.scale(texture, (self.width, self.height))
+
+        rotated_texture = pygame.transform.rotate(scaled_texture, self.angle)
+
+        screen.blit(rotated_texture, (self.x, self.y))
 
 
     def collisions_bullets_walls(self, walls, next_x, next_y):
@@ -74,14 +84,20 @@ class Bullet:
         self.x = self.x + self.vx * self.speed
         self.y = self.y - self.vy * self.speed
 
+        # update angle
+        self.angle = math.degrees(math.atan2(self.vy, self.vx))
+
 
 class homing_bullet(Bullet):
     def __init__(self, x_pos, y_pos, angle, num, opponent):
         super().__init__(x_pos, y_pos, angle, num)
         self.opponent = opponent
         self.speed = HOMING_BULLET_SPEED
-        self.width = 13
-        self.height = 13
+        self.width = HOMING_BULLET_WIDTH
+        self.height = HOMING_BULLET_HEIGHT
+
+        self.red_texture = pygame.image.load(HOMING_BULLET_TEXTURE)
+        self.blue_texture = pygame.image.load(HOMING_BULLET_TEXTURE)
     def collisions_bullets_walls(self, walls, next_x, next_y):
         new_x = next_x
         new_y = next_y
