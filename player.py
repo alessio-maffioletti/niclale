@@ -10,6 +10,49 @@ def circle_point_collision(x1, y1, r1, x2, y2):
         return True
     return False
 
+class character:
+    def __init__(self, folder):
+        self.idle_animations, self.idle_animation_index, self.idle_animation_tick = self.load_animations(folder + IDLE_FOLDER_NAME)
+        self.walk_animations, self.walk_animation_index, self.walk_animation_tick = self.load_animations(folder + WALK_FOLDER_NAME)
+        self.flipped = False
+
+    def load_animations(self, animation_folder):
+        animation_list = [pygame.image.load(animation_folder + image) for image in os.listdir(animation_folder) if image.endswith(".png")]
+        animation_index = 0
+        animation_tick = 0
+        return animation_list, animation_index, animation_tick
+
+    def draw_animation(self, screen, animation_list, animation_index, animation_tick, current_tick, animation_speed, x,y,w,h, flipped=False):
+        if current_tick - animation_tick >= animation_speed:
+            animation_tick = current_tick
+            animation_index += 1
+            if animation_index >= len(animation_list):
+                animation_index = 0
+        surface = animation_list[animation_index]
+        surface = pygame.transform.scale(surface, (w, h))
+        if flipped:
+            surface = pygame.transform.flip(surface, True, False)
+        screen.blit(surface, (x+PLAYER_OFFSET_X, y+PLAYER_OFFSET_Y))
+        return animation_index, animation_tick
+    
+    def draw_character(self, screen, tick, player):
+        if player.moving:
+            if player.vx < 0:
+                self.flipped = True
+            elif player.vx > 0:
+                self.flipped = False
+            elif player.vx == 0:
+                pass
+            else:
+                raise Exception("Something went wrong with self.vx, its value is: " + player.vx)
+            
+            self.walk_animation_index, self.walk_animation_tick = self.draw_animation(screen, self.walk_animations, self.walk_animation_index, self.walk_animation_tick, tick, ANIMATION_SPEED, player.x, player.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
+        elif not player.moving:
+            self.idle_animation_index, self.idle_animation_tick = self.draw_animation(screen, self.idle_animations, self.idle_animation_index, self.idle_animation_tick, tick, ANIMATION_SPEED, player.x, player.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
+        else:
+            raise Exception("Something went wrong with self.moving, its value is: " + player.moving)
+
+
 class Player:
     def __init__(self, x, y, color, num, game):
         self.game = game
@@ -50,57 +93,28 @@ class Player:
         self.shooting_direction = 0
 
         # textures and animations
-        self.idle_animations, self.idle_animation_index, self.idle_animation_tick = self.load_animations(GUNMAN_IDLE)
-        self.walk_animations, self.walk_animation_index, self.walk_animation_tick = self.load_animations(GUNMAN_WALK)
-        self.flipped = False
+        self.blue_gunman = character(BLUE_GUNMAN_TEXTURES)
+        self.red_gunman = character(RED_GUNMAN_TEXTURES)
 
-    def load_animations(self, animation_folder):
-        animation_list = [pygame.image.load(animation_folder + image) for image in os.listdir(animation_folder) if image.endswith(".png")]
-        animation_index = 0
-        animation_tick = 0
-        return animation_list, animation_index, animation_tick
+        self.blue_samurai = character(BLUE_SAMURAI_TEXTURES)
+        self.red_samurai = character(RED_SAMURAI_TEXTURES)
 
-    def draw_animation(self, screen, animation_list, animation_index, animation_tick, current_tick, animation_speed, x,y,w,h, flipped=False):
-        if current_tick - animation_tick >= animation_speed:
-            animation_tick = current_tick
-            animation_index += 1
-            if animation_index >= len(animation_list):
-                animation_index = 0
-        surface = animation_list[animation_index]
-        surface = pygame.transform.scale(surface, (w, h))
-        if flipped:
-            surface = pygame.transform.flip(surface, True, False)
-        screen.blit(surface, (x+PLAYER_OFFSET_X, y+PLAYER_OFFSET_Y))
-        return animation_index, animation_tick
-    
-    def draw_character(self, screen, tick):
-        if self.moving:
-            if self.vx < 0:
-                self.flipped = True
-            elif self.vx > 0:
-                self.flipped = False
-            elif self.vx == 0:
-                pass
-            else:
-                raise Exception("Something went wrong with self.vx, its value is: " + self.vx)
-            
-            self.walk_animation_index, self.walk_animation_tick = self.draw_animation(screen, self.walk_animations, self.walk_animation_index, self.walk_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
-        elif not self.moving:
-            self.idle_animation_index, self.idle_animation_tick = self.draw_animation(screen, self.idle_animations, self.idle_animation_index, self.idle_animation_tick, tick, ANIMATION_SPEED, self.x, self.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
-        else:
-            raise Exception("Something went wrong with self.moving, its value is: " + self.moving)
     def draw(self, screen, tick):
-        self.draw_character(screen, tick)
         # Draw Player according to player number
         if self.player_num == 1:
             if self.parrying:
                 pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
             
-            #pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+            if self.key_num == 1:
+                self.red_samurai.draw_character(screen, tick, self)
+            else:
+                self.blue_samurai.draw_character(screen, tick, self)
             
         else:
-            #pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
-
+            if self.key_num == 1:
+                self.red_gunman.draw_character(screen, tick, self)
+            else:
+                self.blue_gunman.draw_character(screen, tick, self)
             # Create rectangle surface
             surface = pygame.Surface((80, 3), pygame.SRCALPHA)
             pygame.draw.rect(surface, "black", (65, 0, 15, 3))
