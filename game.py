@@ -65,3 +65,11 @@ class Game:
             for h in range(GRID_SIZE):
                 texture = self.floor_texture_list[w + h * GRID_SIZE]
                 self.screen.blit(texture, (w * GRID_WIDTH, h * GRID_WIDTH + D_WALL_HEIGHT))
+
+    def draw_middle_bar(self):
+        single_width = MIDDLE_BAR_WIDTH / LIVE_SWITCH
+        how_many = LIVE_SWITCH - (self.player1.health + self.player2.health)%LIVE_SWITCH
+        pygame.draw.rect(self.screen, "black", (WIDTH//2 - MIDDLE_BAR_WIDTH/2, MIDDLE_BAR_Y, MIDDLE_BAR_WIDTH, MIDDLE_BAR_HEIGHT))
+
+        for i in range(how_many):
+            pygame.draw.rect(self.screen, "green", (WIDTH//2 - MIDDLE_BAR_WIDTH/2 + single_width * i, MIDDLE_BAR_Y, single_width, MIDDLE_BAR_HEIGHT))

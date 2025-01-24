@@ -51,6 +51,49 @@ class character:
             self.idle_animation_index, self.idle_animation_tick = self.draw_animation(screen, self.idle_animations, self.idle_animation_index, self.idle_animation_tick, tick, ANIMATION_SPEED, player.x, player.y, PLAYER_CHARACTER_WIDTH, PLAYER_CHARACTER_HEIGHT, self.flipped)
         else:
             raise Exception("Something went wrong with self.moving, its value is: " + player.moving)
+        
+    def draw_cooldown(self, max_cooldown, cooldown_progress, screen, x, y, w, h):
+        if cooldown_progress > max_cooldown:
+                cooldown_progress = max_cooldown
+        pygame.draw.rect(screen, "black", (x, y, max_cooldown*(w/max_cooldown), h))
+        pygame.draw.rect(screen, "red", (x,y,cooldown_progress*(w/max_cooldown), h))
+
+    def draw_cooldowns(self, screen, tick, player, type):
+        if player.key_num == 1:
+            margin = COOLDOWN_GUI_LEFT_MARGIN
+        else:
+            margin = COOLDOWN_GUI_RIGHT_MARGIN
+
+        if type == "samurai":
+            parry_cooldown = player.parry_cooldown
+            parry_progress = tick - player.last_parry
+            self.draw_cooldown(parry_cooldown, parry_progress, screen, margin, COOLDOWN_GUI_Y1, COOLDOWN_GUI_WIDTH, COOLDOWN_GUI_HEIGHT)
+
+            dash_cooldown = DASH_COOLDOWN
+            dash_progress = player.dash_cooldown
+            self.draw_cooldown(dash_cooldown, dash_progress, screen, margin, COOLDOWN_GUI_Y2, COOLDOWN_GUI_WIDTH, COOLDOWN_GUI_HEIGHT)
+
+        elif type == "gunman":
+            bullet_cooldown = player.cooldown
+            bullet_progress = tick - player.last_shot
+            self.draw_cooldown(bullet_cooldown, bullet_progress, screen, margin, COOLDOWN_GUI_Y1, COOLDOWN_GUI_WIDTH, COOLDOWN_GUI_HEIGHT)
+
+            homing_bullet_cooldown = player.homing_cooldown
+            homing_bullet_progress = tick - player.homing_last_shot
+            self.draw_cooldown(homing_bullet_cooldown, homing_bullet_progress, screen, margin, COOLDOWN_GUI_Y2, COOLDOWN_GUI_WIDTH, COOLDOWN_GUI_HEIGHT)
+
+    def draw_health_bar(self, screen, player):
+        if player.key_num == 1:
+            margin = HEALTH_GUI_LEFT_MARGIN
+        else:
+            margin = HEALTH_GUI_RIGHT_MARGIN
+
+        max_health = PLAYER_MAX_HEALTH
+        current_health = player.health
+
+        pygame.draw.rect(screen, "black", (margin,HEALTH_GUI_Y, max_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
+        pygame.draw.rect(screen, "red", (margin,HEALTH_GUI_Y, current_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
+
 
 
 class Player:
@@ -66,7 +109,7 @@ class Player:
         self.speed = PLAYER_SPEED
         self.color = color
 
-        self.health = 5
+        self.health = PLAYER_MAX_HEALTH
 
         # Player number
         self.player_num = num       
@@ -103,6 +146,8 @@ class Player:
         self.red_samurai = character(RED_SAMURAI_TEXTURES)
 
     def draw(self, screen, tick):
+        #draw middle bar
+        self.game.draw_middle_bar()
         # Draw Player according to player number
         #draw player shadow
         pygame.draw.ellipse(screen, "black", (self.x + PLAYER_SHADOW_OFFSET_X, self.y + PLAYER_SHADOW_OFFSET_Y, PLAYER_SHADOW_RADIUS_X, PLAYER_SHADOW_RADIUS_Y))        
@@ -112,14 +157,22 @@ class Player:
             
             if self.key_num == 1:
                 self.red_samurai.draw_character(screen, tick, self)
+                self.red_samurai.draw_cooldowns(screen, tick, self, "samurai")
+                self.red_samurai.draw_health_bar(screen, self)
             else:
                 self.blue_samurai.draw_character(screen, tick, self)
+                self.blue_samurai.draw_cooldowns(screen, tick, self, "samurai")
+                self.blue_samurai.draw_health_bar(screen, self)
             
         else:
             if self.key_num == 1:
                 self.red_gunman.draw_character(screen, tick, self)
+                self.red_gunman.draw_cooldowns(screen, tick, self, "gunman")
+                self.red_gunman.draw_health_bar(screen, self)
             else:
                 self.blue_gunman.draw_character(screen, tick, self)
+                self.blue_gunman.draw_cooldowns(screen, tick, self, "gunman")
+                self.blue_gunman.draw_health_bar(screen, self)
             # Create rectangle surface
             surface = pygame.Surface((80, 3), pygame.SRCALPHA)
             pygame.draw.rect(surface, "black", (65, 0, 15, 3))
