@@ -200,6 +200,11 @@ class Player:
                 if circle_point_collision(self.x, self.y, PARRY_RANGE, bullet.x + bullet.width // 2, bullet.y + bullet.height // 2):
                     print("parry hit")
                     print(f"Bullet number: {bullet.num}")
+                    if bullet.__class__.__name__ == "homing_bullet":
+                        if self == self.game.player1:
+                            bullet.opponent = self.game.player2
+                        elif self == self.game.player2:
+                            bullet.opponent = self.game.player1
                     if bullet.num == 1:
                         bullet.num = 2
                     elif bullet.num == 2:
