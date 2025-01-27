@@ -95,6 +95,25 @@ class character:
         pygame.draw.rect(screen, "red", (margin,HEALTH_GUI_Y, current_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
 
 
+class Samurai(character):
+    def draw_cooldowns(self, screen, tick, player):
+        type = "samurai"
+        return super().draw_cooldowns(screen, tick, player, type)
+    
+    def draw_sword(self, screen, tick, player, x_offset, y_offset):
+        sword_texture = pygame.image.load(SAMURAI_SWORD_TEXTURE)
+        sword1 = pygame.transform.scale(sword_texture, (SAMURAI_SWORD_WIDTH, SAMURAI_SWORD_HEIGHT))
+        rotated_sword1 = pygame.transform.rotate(sword1, math.degrees(45))
+        screen.blit(rotated_sword1, (player.x + 20, player.y - 5))
+
+        sword2 = pygame.transform.scale(sword_texture, (SAMURAI_SWORD_WIDTH, SAMURAI_SWORD_HEIGHT))
+        rotated_sword1 = pygame.transform.rotate(sword2, math.degrees(45))
+        flipped_sword = pygame.transform.flip(rotated_sword1, True, False)
+        screen.blit(flipped_sword, (player.x - 15, player.y - 5))
+        #screen.blit(sword2, (player.x + 5, player.y + 15))
+
+
+
 
 class Player:
     def __init__(self, x, y, color, num, game):
@@ -142,8 +161,8 @@ class Player:
         self.blue_gunman = character(BLUE_GUNMAN_TEXTURES)
         self.red_gunman = character(RED_GUNMAN_TEXTURES)
 
-        self.blue_samurai = character(BLUE_SAMURAI_TEXTURES)
-        self.red_samurai = character(RED_SAMURAI_TEXTURES)
+        self.blue_samurai = Samurai(BLUE_SAMURAI_TEXTURES)
+        self.red_samurai = Samurai(RED_SAMURAI_TEXTURES)
 
     def draw(self, screen, tick):
         #draw middle bar
@@ -157,12 +176,16 @@ class Player:
             
             if self.key_num == 1:
                 self.red_samurai.draw_character(screen, tick, self)
-                self.red_samurai.draw_cooldowns(screen, tick, self, "samurai")
+                self.red_samurai.draw_cooldowns(screen, tick, self)
                 self.red_samurai.draw_health_bar(screen, self)
+                #self.red_samurai.draw_sword(screen, tick, self, 17,10)
+                self.red_samurai.draw_sword(screen, tick, self, 12,15)
             else:
                 self.blue_samurai.draw_character(screen, tick, self)
-                self.blue_samurai.draw_cooldowns(screen, tick, self, "samurai")
+                self.blue_samurai.draw_cooldowns(screen, tick, self)
                 self.blue_samurai.draw_health_bar(screen, self)
+                #self.red_samurai.draw_sword(screen, tick, self, 17,10)
+                self.blue_samurai.draw_sword(screen, tick, self, 12,15)
             
         else:
             if self.key_num == 1:
