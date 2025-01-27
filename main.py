@@ -13,8 +13,17 @@ game = g.Game()
 def create_power_up():
     if len(game.power_up_list) < 2 and game.tick % 100 == 0:
         random_x, random_y = random.choice(game.available_coordinates)
+        """
+        random_num = random.randint(0, 100)
 
-        type = random.randint(1, 2)
+        if random_num < 10:
+            type = 1
+        elif random_num >= 10 and random_num < 20:
+            type = 2
+        else:
+            type = 3
+        """
+        type = 3
 
         game.power_up_list.append(power_up.PowerUP(random_x * GRID_WIDTH + 15, random_y * GRID_WIDTH + 5, type, game.tick, game))
         
