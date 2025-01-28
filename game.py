@@ -49,7 +49,7 @@ class Game:
         self.in_menu = True
         self.in_map_select = False
 
-        self.map_index = 0
+        self.map_index = 1
 
         self.buttons = [
             button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
@@ -57,10 +57,10 @@ class Game:
             button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT, "Select map", self, select_map_callback)
         ]
         self.picture_buttons = [
-            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2, 80, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 1),
-            button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2, 80, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 2),
-            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2, 320, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 3),
-            button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2, 320, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 4)
+            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, HEIGHT // 4 - IMG_HEIGHT // 2 + 10, IMG_WIDTH, IMG_HEIGHT, MAP_1, self, set_map_index_callback, 1),
+            button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2 - 10, HEIGHT // 4 - IMG_HEIGHT // 2 + 10, IMG_WIDTH, IMG_HEIGHT, MAP_2, self, set_map_index_callback, 2),
+            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, 3 * HEIGHT // 4 - IMG_HEIGHT // 2 - 10, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 3),
+            button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2 - 10, 3 * HEIGHT // 4 - IMG_HEIGHT // 2 - 10, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 4)
         ]
 
         #floor textures
@@ -77,8 +77,7 @@ class Game:
         # player setup
         self.player1 = player.Player(3 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "red", 1, self)
         self.player2 = player.Player(16 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "blue", 2, self)
-        self.collision_rectangles = collision_rects.merge_vertical_rectangles(collision_rects.group_horizontal_blocks(WALLS, WALL_WIDTH))
-
+        
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("gunman and samurai")
         self.clock = pygame.time.Clock()   
@@ -89,12 +88,22 @@ class Game:
         self.bullet_list = []
 
         self.wall_list = []
-        for wall in WALLS:
+
+        if self.map_index == 1:
+            self.map = WALLS1
+        elif self.map_index == 2:
+            self.map = WALLS2
+
+        for wall in self.map:
             self.wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
+            
         #SORT WALLS
         self.wall_list.sort(key=lambda wall: wall.x, reverse=False)
 
-        self.available_coordinates = create_available_coordinates(WALLS)
+        self.available_coordinates = create_available_coordinates(self.map)
+
+        self.collision_rectangles = collision_rects.merge_vertical_rectangles(collision_rects.group_horizontal_blocks(self.map, WALL_WIDTH))
+
 
         
     def draw_floor(self):

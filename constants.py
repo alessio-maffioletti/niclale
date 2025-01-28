@@ -16,7 +16,8 @@ WALL_BORDER = 3
 #3d
 D_WALL_HEIGHT = 20 #int(WALL_WIDTH/2)
 
-WALLS = json.load(open(os.curdir + "/niclale/walls1.json"))
+WALLS1 = json.load(open(os.curdir + "/niclale/walls1.json"))
+WALLS2 = json.load(open(os.curdir + "/niclale/walls2.json"))
 textures = os.curdir + "/niclale/textures/"
 
 WALL_TEXTURE = textures + "wall.png"
@@ -144,11 +145,16 @@ IMMUNITY_DURATION = 180
 BUTTON_WIDTH = 250
 BUTTON_HEIGHT = 50
 
-IMG_WIDTH = 180
-IMG_HEIGHT = 180
+IMG_WIDTH = 220
+IMG_HEIGHT = 220
 
-GRAY = (200, 200, 200)
-HOVER_COLOR = (100, 100, 100)
+ORANGE = (240, 200, 150)
+HOVER_COLOR = (190, 150, 100)
 FONT_COLOR = (0, 0, 0)
 BUTTON_FONT_SIZE = 40
 TITLE_FONT_SIZE = 60
+
+MAP_SELECT_COLOR = (97, 64, 81)
+
+MAP_1 = textures + "maps/map1.png"
+MAP_2 = textures + "maps/map2.png"

@@ -6,7 +6,7 @@ class Button:
         self.game = game
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
-        self.gray = GRAY
+        self.gray = ORANGE
         self.hover_color = HOVER_COLOR
         self.callback = callback
         self.font = pygame.font.Font(None, BUTTON_FONT_SIZE)
@@ -17,7 +17,7 @@ class Button:
         if self.rect.collidepoint(mouse_pos):
             color = self.hover_color
         else:
-            color = GRAY
+            color = ORANGE
 
         pygame.draw.rect(screen, color, self.rect)
         
@@ -41,21 +41,23 @@ class PictureButton(Button):
         self.map_index = map_index
 
         # Scale the image to fit the button
-        self.image = pygame.transform.scale(self.image, (width, height))
+        self.image = pygame.transform.scale(self.image, (width - 10, height - 10))
+        self.img_rect = self.image.get_rect(center=self.rect.center)
 
     def draw(self, screen):
         mouse_pos = pygame.mouse.get_pos()
 
         if self.rect.collidepoint(mouse_pos):
-            color = self.hover_color
+            color = (0, 0, 0)
         else:
-            color = self.gray
+            color = (100, 100, 100)
 
         pygame.draw.rect(screen, color, self.rect) 
-        screen.blit(self.image, self.rect)
+        screen.blit(self.image, self.img_rect)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_pos = pygame.mouse.get_pos()
             if self.rect.collidepoint(mouse_pos):
                 self.callback(self.map_index)
+                print(f"Selected map {self.map_index}")

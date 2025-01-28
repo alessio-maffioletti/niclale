@@ -47,7 +47,7 @@ while True:
         pygame.display.flip()
 
     if game.in_map_select:
-        game.screen.fill((255, 255, 255))
+        game.screen.fill(MAP_SELECT_COLOR)
 
         # Draw buttons
         for button in game.picture_buttons:
