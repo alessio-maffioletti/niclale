@@ -22,7 +22,7 @@ def create_power_up():
             type = 2
         else:
             type = 3
-    
+
 
         game.power_up_list.append(power_up.PowerUP(random_x * GRID_WIDTH + 15, random_y * GRID_WIDTH + 5, type, game.tick, game))
         

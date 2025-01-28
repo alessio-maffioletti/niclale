@@ -13,7 +13,13 @@ class PowerUP:
         self.health = 1
         self.creation_time = t
     def draw(self, screen):
-        pygame.draw.circle(screen, "green", (self.x, self.y), self.radius)
+        if self.num == 1:
+            color = "red"
+        elif self.num == 2:
+            color = "blue"
+        else:
+            color = "green"
+        pygame.draw.circle(screen, color, (self.x, self.y), self.radius)
 
 
     def power_1(self, key_num):
