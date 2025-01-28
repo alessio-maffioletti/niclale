@@ -41,8 +41,8 @@ class Game:
         self.in_menu = True
 
         self.buttons = [
-            button.Button(50, 50, 250, 50, "Start game", self, start_game_callback),
-            button.Button(50, 150, 250, 50, "Quit", self, quit_game_callback)
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT, "Quit", self, quit_game_callback)
         ]
 
         #floor textures

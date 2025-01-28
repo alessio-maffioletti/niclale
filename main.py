@@ -2,9 +2,6 @@
 import random
 import pygame
 from constants import *
-import math
-import player
-import walls
 import game as g
 import power_up
 
