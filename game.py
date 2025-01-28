@@ -32,17 +32,35 @@ class Game:
         # Button callbacks
         def start_game_callback():
             self.in_menu = False
+            self.in_game = True
         def quit_game_callback():
             pygame.quit()
             quit()
+        def select_map_callback():
+            self.in_menu = False
+            self.in_map_select = True
+        def set_map_index_callback(index):
+            self.map_index = index
+            self.in_map_select = False
+            self.in_menu = True
 
 
-        self.running = True
+        self.in_game = False
         self.in_menu = True
+        self.in_map_select = False
+
+        self.map_index = 0
 
         self.buttons = [
             button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
-            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT, "Quit", self, quit_game_callback)
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT, "Quit", self, quit_game_callback),
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT, "Select map", self, select_map_callback)
+        ]
+        self.picture_buttons = [
+            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2, 80, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 1),
+            button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2, 80, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 2),
+            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2, 320, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 3),
+            button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2, 320, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 4)
         ]
 
         #floor textures
