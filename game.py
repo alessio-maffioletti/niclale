@@ -3,6 +3,7 @@ import pygame
 import player
 import walls
 import collision_rects
+import button
 
 import random
 import os
@@ -21,8 +22,29 @@ def create_available_coordinates(data):
     available_coordinates = [coords for coords in all_coordinates if coords not in used_coordinates]
     return available_coordinates
 
+
 class Game:
     def __init__(self):
+
+        # pygame setup
+        pygame.init()
+
+        # Button callbacks
+        def start_game_callback():
+            self.in_menu = False
+        def quit_game_callback():
+            pygame.quit()
+            quit()
+
+
+        self.running = True
+        self.in_menu = True
+
+        self.buttons = [
+            button.Button(50, 50, 250, 50, "Start game", self, start_game_callback),
+            button.Button(50, 150, 250, 50, "Quit", self, quit_game_callback)
+        ]
+
         #floor textures
         self.texture_probabilities = {
             F_CORNER_1: 0.2/4,
@@ -38,9 +60,6 @@ class Game:
         self.player1 = player.Player(3 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "red", 1, self)
         self.player2 = player.Player(16 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "blue", 2, self)
         self.collision_rectangles = collision_rects.merge_vertical_rectangles(collision_rects.group_horizontal_blocks(WALLS, WALL_WIDTH))
-
-        # pygame setup
-        pygame.init()
 
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("gunman and samurai")

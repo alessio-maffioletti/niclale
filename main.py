@@ -25,9 +25,31 @@ def create_power_up():
 
 
         game.power_up_list.append(power_up.PowerUP(random_x * GRID_WIDTH + 15, random_y * GRID_WIDTH + 5, type, game.tick, game))
-        
 
-while True:
+
+while game.running and game.in_menu:
+    game.screen.fill((255, 255, 255))
+
+    # Draw title
+    title_font = pygame.font.Font(None, TITLE_FONT_SIZE)
+    title_surf = title_font.render("Gunman and Samurai", True, FONT_COLOR)
+    title_rect = title_surf.get_rect(center=(WIDTH // 2, 100))
+    game.screen.blit(title_surf, title_rect)    
+
+    # Draw buttons
+    for button in game.buttons:
+        button.draw(game.screen)
+
+        # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            quit()
+        for button in game.buttons:
+            button.handle_event(event)
+
+    pygame.display.flip()
+
+while game.running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
