@@ -83,8 +83,8 @@ class Game:
 
         #shuffle list
         # player setup
-        self.player1 = player.Player(1 * GRID_WIDTH + 2, 18 * GRID_WIDTH, "red", 1, self)
-        self.player2 = player.Player(18 * GRID_WIDTH + 2, 1 * GRID_WIDTH, "blue", 2, self)
+        self.player1 = player.Player(1 * GRID_WIDTH + 2, 10 * GRID_WIDTH, "red", 1, self)
+        self.player2 = player.Player(18 * GRID_WIDTH + 2, 10 * GRID_WIDTH, "blue", 2, self)
         
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("gunman and samurai")

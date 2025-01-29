@@ -13,7 +13,7 @@ GRID_COLOR = (200, 200, 200)
 LOCKED_COLOR = (255, 0, 0)
 SAVE_FILE = "walls2.json"
 
-LOCKED_CELLS = {(1, 18), (18, 1)}
+LOCKED_CELLS = {(1, 10), (18, 10)}
 
 # Initialize Pygame
 pygame.init()
