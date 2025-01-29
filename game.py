@@ -107,6 +107,8 @@ class Game:
                 self.map = WALLS2
             elif self.map_index == 3:
                 self.map = WALLS3
+            elif self.map_index == 4:
+                self.map = WALLS4
             
 
             for wall in self.map:
