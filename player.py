@@ -498,7 +498,7 @@ class Player:
 
                     # Check for change
                     if not self.immunity:
-                        if (self.game.player1.health + self.game.player2.health) % 2 == 0:
+                        if (self.game.player1.health + self.game.player2.health) % 5 == 0:
                             dummy = self.game.player1.player_num
                             self.game.player1.player_num = self.game.player2.player_num
                             self.game.player2.player_num = dummy

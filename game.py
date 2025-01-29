@@ -127,7 +127,9 @@ class Game:
 
     def draw_middle_bar(self):
         single_width = MIDDLE_BAR_WIDTH / LIVE_SWITCH
-        how_many = LIVE_SWITCH - (self.player1.health + self.player2.health)%LIVE_SWITCH
+        how_many = (self.player1.health + self.player2.health)%LIVE_SWITCH
+        if how_many == 0:
+            how_many = LIVE_SWITCH
         pygame.draw.rect(self.screen, "black", (WIDTH//2 - MIDDLE_BAR_WIDTH/2, MIDDLE_BAR_Y, MIDDLE_BAR_WIDTH, MIDDLE_BAR_HEIGHT))
 
         for i in range(how_many):
