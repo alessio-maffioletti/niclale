@@ -101,7 +101,7 @@ class character:
         pygame.draw.rect(screen, "white", (margin,HEALTH_GUI_Y, max_health*(HEALTH_GUI_WIDTH/max_health) + razi, HEALTH_GUI_HEIGHT+razi))
         pygame.draw.rect(screen, "red", (margin + razi/2,HEALTH_GUI_Y + razi/2, current_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
 
-        screen.blit(health_text, (margin + HEALTH_GUI_WIDTH/2 - health_text.get_width()/2, HEALTH_GUI_Y + razi/2))
+        screen.blit(health_text, (margin + HEALTH_GUI_WIDTH/2 - health_text.get_width()/2 + razi, HEALTH_GUI_Y + razi/2))
 
     def draw_background_rect(self, screen, direction):
         height = COOLDOWN_RECT_HEIGHT
