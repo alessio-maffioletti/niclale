@@ -44,11 +44,15 @@ class Game:
             self.in_map_select = False
             self.in_menu = True
             map_creation(self)
+        def restart_game_callback():
+            pygame.quit()
+            quit()
 
 
         self.in_game = False
         self.in_menu = True
         self.in_map_select = False
+        self.game_over = False
 
         self.map_index = 1
 
@@ -62,6 +66,9 @@ class Game:
             button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2 - 10, HEIGHT // 4 - IMG_HEIGHT // 2 + 10, IMG_WIDTH, IMG_HEIGHT, MAP_2, self, set_map_index_callback, 2),
             button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, 3 * HEIGHT // 4 - IMG_HEIGHT // 2 - 10, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 3),
             button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2 - 10, 3 * HEIGHT // 4 - IMG_HEIGHT // 2 - 10, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 4)
+        ]
+        self.game_over_buttons = [
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Back", self, restart_game_callback),
         ]
 
         #floor textures
@@ -111,6 +118,7 @@ class Game:
 
 
         map_creation(self)
+        
     def draw_floor(self):
         for w in range(GRID_SIZE):
             for h in range(GRID_SIZE):

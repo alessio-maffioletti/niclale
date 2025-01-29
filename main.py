@@ -7,6 +7,7 @@ import power_up
 
 game = g.Game()
 
+
 def create_power_up():
     if len(game.power_up_list) < 2 and game.tick % 100 == 0:
         random_x, random_y = random.choice(game.available_coordinates)
@@ -62,6 +63,29 @@ while True:
 
         pygame.display.flip()
 
+    if game.game_over:
+        game.screen.fill(GAME_OVER_COLOR)
+
+        # Draw title
+        title_font = pygame.font.Font(None, GAME_OVER_FONT_SIZE)
+        title_surf = title_font.render("GAME OVER", True, GAME_OVER_FONT_COLOR)
+        title_rect = title_surf.get_rect(center=(WIDTH // 2, 100))
+        game.screen.blit(title_surf, title_rect)  
+
+        # Draw buttons
+        for button in game.game_over_buttons:
+            button.draw(game.screen)
+
+            # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+            for button in game.game_over_buttons:
+                button.handle_event(event)
+
+        pygame.display.flip()
+
+
     if game.in_game:
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
@@ -106,6 +130,13 @@ while True:
         game.player2.draw(game.screen, game.tick)
 
         game.clock.tick(FPS)
+
+        #check for game over
+        if game.player1.health <= 0 or game.player2.health <= 0:
+            game.in_game = False
+            game.game_over = True
+            
+
 
         
         pygame.display.update()
