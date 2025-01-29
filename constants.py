@@ -18,6 +18,7 @@ D_WALL_HEIGHT = 20 #int(WALL_WIDTH/2)
 
 WALLS1 = json.load(open(os.curdir + "/niclale/walls1.json"))
 WALLS2 = json.load(open(os.curdir + "/niclale/walls2.json"))
+WALLS3 = json.load(open(os.curdir + "/niclale/walls3.json"))
 textures = os.curdir + "/niclale/textures/"
 
 WALL_TEXTURE = textures + "wall.png"
@@ -175,6 +176,7 @@ MAP_SELECT_COLOR = (97, 64, 81)
 
 MAP_1 = textures + "maps/map1.png"
 MAP_2 = textures + "maps/map2.png"
+MAP_3 = textures + "maps/map3.png"
 
 GAME_OVER_COLOR = (0, 0, 0)
 GAME_OVER_FONT_SIZE = 80

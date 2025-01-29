@@ -54,7 +54,7 @@ class Game:
         self.in_map_select = False
         self.game_over = False
 
-        self.map_index = 1
+        self.map_index = 3
 
         self.buttons = [
             button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
@@ -64,7 +64,7 @@ class Game:
         self.picture_buttons = [
             button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, HEIGHT // 4 - IMG_HEIGHT // 2 + 10, IMG_WIDTH, IMG_HEIGHT, MAP_1, self, set_map_index_callback, 1),
             button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2 - 10, HEIGHT // 4 - IMG_HEIGHT // 2 + 10, IMG_WIDTH, IMG_HEIGHT, MAP_2, self, set_map_index_callback, 2),
-            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, 3 * HEIGHT // 4 - IMG_HEIGHT // 2 - 10, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 3),
+            button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, 3 * HEIGHT // 4 - IMG_HEIGHT // 2 - 10, IMG_WIDTH, IMG_HEIGHT, MAP_3, self, set_map_index_callback, 3),
             button.PictureButton(3 * WIDTH // 4 - IMG_WIDTH // 2 - 10, 3 * HEIGHT // 4 - IMG_HEIGHT // 2 - 10, IMG_WIDTH, IMG_HEIGHT, WALL_TEXTURE, self, set_map_index_callback, 4)
         ]
         self.game_over_buttons = [
@@ -105,6 +105,9 @@ class Game:
                 self.map = WALLS1
             elif self.map_index == 2:
                 self.map = WALLS2
+            elif self.map_index == 3:
+                self.map = WALLS3
+            
 
             for wall in self.map:
                 self.wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
