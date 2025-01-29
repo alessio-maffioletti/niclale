@@ -3,14 +3,14 @@ import json
 import os
 
 # Constants
-GRID_SIZE = 25
+GRID_SIZE = 20
 CELL_SIZE = 30
 WINDOW_SIZE = GRID_SIZE * CELL_SIZE
 BG_COLOR = (255, 255, 255)
 NORMAL_WALL_COLOR = (150, 150, 150)  # Color for normal wall (False)
 THREED_WALL_COLOR = (0, 0, 0)        # Color for 3D wall (True)
 GRID_COLOR = (200, 200, 200)
-SAVE_FILE = "walls.json"
+SAVE_FILE = "walls2.json"
 
 # Initialize Pygame
 pygame.init()

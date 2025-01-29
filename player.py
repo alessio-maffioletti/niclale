@@ -134,6 +134,9 @@ class Player:
         self.height = PLAYER_HITBOX_Y
         self.speed = PLAYER_SPEED
         self.color = color
+        self.immunity = False
+        self.stunned = False
+        self.effect_time = 0
 
         self.health = PLAYER_MAX_HEALTH
 
@@ -225,6 +228,16 @@ class Player:
             # Blit the rotated rectangle
             screen.blit(rotated, rotated_rect.topleft)
 
+    def stop_effect(self, tick):
+        if self.immunity:
+            end_time = self.effect_time + IMMUNITY_DURATION
+            if end_time < tick:
+                self.immunity = False
+        elif self.stunned:
+            end_time = self.effect_time + STUNNED_DURATION
+            if end_time < tick:
+                self.stunned = False
+
     def parry(self, tick):
         print("parry")
         #self.parrying = True
@@ -253,7 +266,6 @@ class Player:
 
 
     def move(self, keys, tick):
-
         if self.key_num == 1:
 
             if self.player_num == 1:
@@ -274,7 +286,7 @@ class Player:
 
 
 
-
+            
             if keys[pygame.K_w]:
                 self.vy = -self.speed
                 #if self.player_num == 1:
@@ -365,6 +377,10 @@ class Player:
 
         self.speed = PLAYER_SPEED
 
+        if self.stunned:
+            self.vx = 0
+            self.vy = 0
+
 
     def collision_with_powerups(self, powerups):
         for powerup in powerups:
@@ -389,6 +405,9 @@ class Player:
 
             elif powerup.num == 2:
                 powerup.power_2(self.key_num)
+
+            elif powerup.num == 3:
+                powerup.power_3(self.game.tick, self)
 
 
                 
@@ -442,16 +461,18 @@ class Player:
                 bullet_rect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.height)
                 if player_rect.colliderect(bullet_rect):
                     print("hit")
-                    self.health -= bullet.damage
+                    if not self.immunity:
+                        self.health -= bullet.damage
                     bullet.health = 0
                     rem_bullets.append(n)
                     print(f"Player {self.key_num} health: {self.health}")
 
                     # Check for change
-                    if (self.game.player1.health + self.game.player2.health) % 2 == 0:
-                        dummy = self.game.player1.player_num
-                        self.game.player1.player_num = self.game.player2.player_num
-                        self.game.player2.player_num = dummy
+                    if not self.immunity:
+                        if (self.game.player1.health + self.game.player2.health) % 2 == 0:
+                            dummy = self.game.player1.player_num
+                            self.game.player1.player_num = self.game.player2.player_num
+                            self.game.player2.player_num = dummy
 
         self.game.bullet_list = [bullet for n, bullet in enumerate(self.game.bullet_list) if n not in rem_bullets]
 
@@ -541,6 +562,8 @@ class Player:
         self.collision_with_bullets()
 
         self.powerup_effects(self.collision_with_powerups(self.game.power_up_list))
+
+        self.stop_effect(tick)
 
         self.dash_cooldown += 1
 

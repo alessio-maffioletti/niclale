@@ -2,7 +2,6 @@
 import json
 from constants import *
 
-json_data = WALLS
 def group_horizontal_blocks(json_data, block_size):
     """
     Groups horizontal blocks into rectangles based on their x and y coordinates.
@@ -57,8 +56,6 @@ def group_horizontal_blocks(json_data, block_size):
     return grouped_rectangles
 
 
-rectangles = group_horizontal_blocks(json_data, WALL_WIDTH)
-
 
 def merge_vertical_rectangles(rectangles):
     """
@@ -91,5 +88,3 @@ def merge_vertical_rectangles(rectangles):
 
     return merged_rectangles
 
-
-merged_rectangles = merge_vertical_rectangles(rectangles)
