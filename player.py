@@ -56,8 +56,8 @@ class character:
         if cooldown_progress > max_cooldown:
                 cooldown_progress = max_cooldown
         razi = 4
-        pygame.draw.rect(screen, "black", (x, y, max_cooldown*(w/max_cooldown) + razi, h + razi))
-        pygame.draw.rect(screen, "yellow", (x + razi/2,y + razi/2,cooldown_progress*(w/max_cooldown), h))
+        pygame.draw.rect(screen, "white", (x, y, max_cooldown*(w/max_cooldown) + razi, h + razi))
+        pygame.draw.rect(screen, (255, 132, 0), (x + razi/2,y + razi/2,cooldown_progress*(w/max_cooldown), h))
 
     def draw_cooldowns(self, screen, tick, player, type):
         if player.key_num == 1:
