@@ -43,6 +43,7 @@ class Game:
             self.map_index = index
             self.in_map_select = False
             self.in_menu = True
+            map_creation(self)
 
 
         self.in_game = False
@@ -53,8 +54,8 @@ class Game:
 
         self.buttons = [
             button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
-            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT, "Quit", self, quit_game_callback),
-            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT, "Select map", self, select_map_callback)
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT, "Quit", self, quit_game_callback),
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT, "Select map", self, select_map_callback)
         ]
         self.picture_buttons = [
             button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, HEIGHT // 4 - IMG_HEIGHT // 2 + 10, IMG_WIDTH, IMG_HEIGHT, MAP_1, self, set_map_index_callback, 1),
@@ -75,8 +76,8 @@ class Game:
 
         #shuffle list
         # player setup
-        self.player1 = player.Player(3 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "red", 1, self)
-        self.player2 = player.Player(16 * GRID_WIDTH + 2, 13 * GRID_WIDTH, "blue", 2, self)
+        self.player1 = player.Player(1 * GRID_WIDTH + 2, 18 * GRID_WIDTH, "red", 1, self)
+        self.player2 = player.Player(18 * GRID_WIDTH + 2, 1 * GRID_WIDTH, "blue", 2, self)
         
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("gunman and samurai")
@@ -89,23 +90,27 @@ class Game:
 
         self.wall_list = []
 
-        if self.map_index == 1:
-            self.map = WALLS1
-        elif self.map_index == 2:
-            self.map = WALLS2
-
-        for wall in self.map:
-            self.wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
-            
-        #SORT WALLS
-        self.wall_list.sort(key=lambda wall: wall.x, reverse=False)
-
-        self.available_coordinates = create_available_coordinates(self.map)
-
-        self.collision_rectangles = collision_rects.merge_vertical_rectangles(collision_rects.group_horizontal_blocks(self.map, WALL_WIDTH))
+        def map_creation(self):
+            self.wall_list = []
 
 
-        
+            if self.map_index == 1:
+                self.map = WALLS1
+            elif self.map_index == 2:
+                self.map = WALLS2
+
+            for wall in self.map:
+                self.wall_list.append(walls.Wall(wall[0][0], wall[0][1], wall[1]))
+
+            #SORT WALLS
+            self.wall_list.sort(key=lambda wall: wall.x, reverse=False)
+
+            self.available_coordinates = create_available_coordinates(self.map)
+
+            self.collision_rectangles = collision_rects.merge_vertical_rectangles(collision_rects.group_horizontal_blocks(self.map, WALL_WIDTH))
+
+
+        map_creation(self)
     def draw_floor(self):
         for w in range(GRID_SIZE):
             for h in range(GRID_SIZE):

@@ -10,7 +10,10 @@ BG_COLOR = (255, 255, 255)
 NORMAL_WALL_COLOR = (150, 150, 150)  # Color for normal wall (False)
 THREED_WALL_COLOR = (0, 0, 0)        # Color for 3D wall (True)
 GRID_COLOR = (200, 200, 200)
+LOCKED_COLOR = (255, 0, 0)
 SAVE_FILE = "walls2.json"
+
+LOCKED_CELLS = {(1, 18), (18, 1)}
 
 # Initialize Pygame
 pygame.init()
@@ -51,6 +54,12 @@ def draw_walls():
         rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
         pygame.draw.rect(screen, color, rect)
 
+def draw_locked_cells():
+    for x, y in LOCKED_CELLS:
+        rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+        pygame.draw.rect(screen, LOCKED_COLOR, rect)
+
+
 # Load walls from file if it exists
 load_walls_from_file()
 
@@ -60,6 +69,7 @@ while running:
     screen.fill(BG_COLOR)
     draw_grid()
     draw_walls()
+    draw_locked_cells()
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -68,6 +78,9 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
             grid_x, grid_y = x // CELL_SIZE, y // CELL_SIZE
+
+            if (grid_x, grid_y) in LOCKED_CELLS:
+                continue
             
             # Cycle through wall states on click
             current_state = walls.get((grid_x, grid_y), None)
