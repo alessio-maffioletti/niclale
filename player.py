@@ -94,6 +94,17 @@ class character:
         pygame.draw.rect(screen, "black", (margin,HEALTH_GUI_Y, max_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
         pygame.draw.rect(screen, "red", (margin,HEALTH_GUI_Y, current_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
 
+    def draw_background_rect(self, screen, direction):
+        height = COOLDOWN_RECT_HEIGHT
+        width = COOLDOWN_RECT_WIDTH
+        if direction == "left":
+            trans_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+            pygame.draw.rect(trans_surface, COOLDOWN_RECT_COLOR, (0, 0, width, height), border_radius=10)
+            screen.blit(trans_surface, (0, 0))
+        elif direction == "right":
+            trans_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+            pygame.draw.rect(trans_surface, COOLDOWN_RECT_COLOR, (0, 0, width, height), border_radius=10)
+            screen.blit(trans_surface, (WIDTH - width, 0))
 
 class Samurai(character):
     def __init__(self, folder):
@@ -184,31 +195,40 @@ class Player:
             if self.parrying:
                 pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
 
-            
+            #SAMURAI
             if self.key_num == 1:
+                #RED
                 self.red_samurai.draw_character(screen, tick, self)
-                self.red_samurai.draw_cooldowns(screen, tick, self)
-                self.red_samurai.draw_health_bar(screen, self)
                 if not self.parrying:
                     self.red_samurai.draw_sword(screen, self)
                 else:
                     self.red_samurai.parry_animation(screen, tick, self)
+                self.red_samurai.draw_background_rect(screen, "left")
+                self.red_samurai.draw_cooldowns(screen, tick, self)
+                self.red_samurai.draw_health_bar(screen, self)
             else:
+                #BLUE
                 self.blue_samurai.draw_character(screen, tick, self)
-                self.blue_samurai.draw_cooldowns(screen, tick, self)
-                self.blue_samurai.draw_health_bar(screen, self)
                 if not self.parrying:
                     self.blue_samurai.draw_sword(screen, self)
                 else:
                     self.blue_samurai.parry_animation(screen, tick, self)
+                self.red_samurai.draw_background_rect(screen, "right")
+                self.blue_samurai.draw_cooldowns(screen, tick, self)
+                self.blue_samurai.draw_health_bar(screen, self)
             
         else:
+            #GUNMAN
             if self.key_num == 1:
+                #RED
                 self.red_gunman.draw_character(screen, tick, self)
+                self.red_gunman.draw_background_rect(screen, "left")
                 self.red_gunman.draw_cooldowns(screen, tick, self, "gunman")
                 self.red_gunman.draw_health_bar(screen, self)
             else:
+                #BLUE
                 self.blue_gunman.draw_character(screen, tick, self)
+                self.blue_gunman.draw_background_rect(screen, "right")
                 self.blue_gunman.draw_cooldowns(screen, tick, self, "gunman")
                 self.blue_gunman.draw_health_bar(screen, self)
             # Create rectangle surface
