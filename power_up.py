@@ -4,7 +4,7 @@ import pygame
 
 
 class PowerUP:
-    def __init__(self, x, y, type, t, game):
+    def __init__(self, x, y, type, t, game, path):
         self.game = game
         self.x = x
         self.y = y
@@ -12,14 +12,11 @@ class PowerUP:
         self.num = type
         self.health = 1
         self.creation_time = t
+        self.img = pygame.image.load(path)
+        self.scaled_img = pygame.transform.scale(self.img, (self.radius * 2, self.radius * 2))
     def draw(self, screen):
-        if self.num == 1:
-            color = "red"
-        elif self.num == 2:
-            color = "blue"
-        else:
-            color = "green"
-        pygame.draw.circle(screen, color, (self.x, self.y), self.radius)
+        pygame.draw.circle(screen, "red", (self.x, self.y), self.radius)
+        screen.blit(self.scaled_img, (self.x - self.radius, self.y - self.radius))
 
 
     def power_1(self, key_num):
