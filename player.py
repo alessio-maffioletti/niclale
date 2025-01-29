@@ -96,21 +96,28 @@ class character:
 
 
 class Samurai(character):
+    def __init__(self, folder):
+        self.parry_animation_index = 0
+        self.parry_animation_tick = 0
+        super().__init__(folder)
     def draw_cooldowns(self, screen, tick, player):
         type = "samurai"
         return super().draw_cooldowns(screen, tick, player, type)
     
-    def draw_sword(self, screen, tick, player, x_offset, y_offset):
+    def draw_sword(self, screen, player):
         sword_texture = pygame.image.load(SAMURAI_SWORD_TEXTURE)
-        sword1 = pygame.transform.scale(sword_texture, (SAMURAI_SWORD_WIDTH, SAMURAI_SWORD_HEIGHT))
-        rotated_sword1 = pygame.transform.rotate(sword1, math.degrees(45))
-        screen.blit(rotated_sword1, (player.x + 20, player.y - 5))
+        s1 = pygame.transform.scale(sword_texture, (SAMURAI_SWORD_WIDTH, SAMURAI_SWORD_HEIGHT))
+        self.sword1 = pygame.transform.rotate(s1, math.degrees(45))
+        screen.blit(self.sword1, (player.x + SAMURAI_SWORD_X_OFFSET_1, player.y + SAMURAI_SWORD_Y_OFFSET_1))
 
-        sword2 = pygame.transform.scale(sword_texture, (SAMURAI_SWORD_WIDTH, SAMURAI_SWORD_HEIGHT))
-        rotated_sword1 = pygame.transform.rotate(sword2, math.degrees(45))
-        flipped_sword = pygame.transform.flip(rotated_sword1, True, False)
-        screen.blit(flipped_sword, (player.x - 15, player.y - 5))
-        #screen.blit(sword2, (player.x + 5, player.y + 15))
+        s2 = pygame.transform.scale(sword_texture, (SAMURAI_SWORD_WIDTH, SAMURAI_SWORD_HEIGHT))
+        rotated_sword1 = pygame.transform.rotate(s2, math.degrees(45))
+        self.sword2 = pygame.transform.flip(rotated_sword1, True, False)
+
+        screen.blit(self.sword2, (player.x + SAMURAI_SWORD_X_OFFSET_2, player.y + SAMURAI_SWORD_Y_OFFSET_2))
+
+    def parry_animation(self, screen, tick, player):
+        pass
 
 
 
@@ -173,19 +180,24 @@ class Player:
         if self.player_num == 1:
             if self.parrying:
                 pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
+
             
             if self.key_num == 1:
                 self.red_samurai.draw_character(screen, tick, self)
                 self.red_samurai.draw_cooldowns(screen, tick, self)
                 self.red_samurai.draw_health_bar(screen, self)
-                #self.red_samurai.draw_sword(screen, tick, self, 17,10)
-                self.red_samurai.draw_sword(screen, tick, self, 12,15)
+                if not self.parrying:
+                    self.red_samurai.draw_sword(screen, self)
+                else:
+                    self.red_samurai.parry_animation(screen, tick, self)
             else:
                 self.blue_samurai.draw_character(screen, tick, self)
                 self.blue_samurai.draw_cooldowns(screen, tick, self)
                 self.blue_samurai.draw_health_bar(screen, self)
-                #self.red_samurai.draw_sword(screen, tick, self, 17,10)
-                self.blue_samurai.draw_sword(screen, tick, self, 12,15)
+                if not self.parrying:
+                    self.blue_samurai.draw_sword(screen, self)
+                else:
+                    self.blue_samurai.parry_animation(screen, tick, self)
             
         else:
             if self.key_num == 1:
@@ -215,8 +227,8 @@ class Player:
 
     def parry(self, tick):
         print("parry")
-        self.parrying = True
-        self.last_parry = tick
+        #self.parrying = True
+        #self.last_parry = tick
 
         for bullet in self.game.bullet_list:
             if bullet.num != self.key_num:
@@ -250,11 +262,16 @@ class Player:
                     self.speed = self.dash_speed
 
                 if keys[pygame.K_1] and tick - self.last_parry > self.parry_cooldown:
+                    self.parrying = True
+                    self.last_parry = tick
                     self.parry(tick)
                 
                 if self.parrying:
                     if tick - self.last_parry > self.parry_length:
                         self.parrying = False
+                    else:
+                        self.parry(tick)
+
 
 
 
