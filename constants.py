@@ -154,7 +154,9 @@ POWER_UP_RADIUS = 10
 STUNNED_DURATION = 120
 IMMUNITY_DURATION = 180
 
+IMG_POWER1 = textures + "power_up/power1.png"
 IMG_POWER2 = textures + "power_up/power2.png"
+IMG_POWER3 = textures + "power_up/power3.png"
 
 #BUTTONS
 BUTTON_WIDTH = 250

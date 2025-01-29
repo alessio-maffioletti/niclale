@@ -16,13 +16,13 @@ def create_power_up():
 
         if random_num < 10:
             type = 1
-            path = IMG_POWER2
+            path = IMG_POWER1
         elif random_num >= 10 and random_num < 20:
             type = 2
             path = IMG_POWER2
         else:
             type = 3
-            path = IMG_POWER2
+            path = IMG_POWER3
 
 
         game.power_up_list.append(power_up.PowerUP(random_x * GRID_WIDTH + 15, random_y * GRID_WIDTH + 5, type, game.tick, game, path))
