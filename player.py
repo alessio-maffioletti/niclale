@@ -56,8 +56,8 @@ class character:
         if cooldown_progress > max_cooldown:
                 cooldown_progress = max_cooldown
         razi = 4
-        pygame.draw.rect(screen, "black", (x, y, max_cooldown*(w/max_cooldown) + razi, h + razi))
-        pygame.draw.rect(screen, "yellow", (x + razi/2,y + razi/2,cooldown_progress*(w/max_cooldown), h))
+        pygame.draw.rect(screen, "white", (x, y, max_cooldown*(w/max_cooldown) + razi, h + razi))
+        pygame.draw.rect(screen, (255, 132, 0), (x + razi/2,y + razi/2,cooldown_progress*(w/max_cooldown), h))
 
     def draw_cooldowns(self, screen, tick, player, type):
         if player.key_num == 1:
@@ -101,7 +101,7 @@ class character:
         pygame.draw.rect(screen, "white", (margin,HEALTH_GUI_Y, max_health*(HEALTH_GUI_WIDTH/max_health) + razi, HEALTH_GUI_HEIGHT+razi))
         pygame.draw.rect(screen, "red", (margin + razi/2,HEALTH_GUI_Y + razi/2, current_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
 
-        screen.blit(health_text, (margin + HEALTH_GUI_WIDTH/2 - health_text.get_width()/2, HEALTH_GUI_Y + razi/2))
+        screen.blit(health_text, (margin + HEALTH_GUI_WIDTH/2 - health_text.get_width()/2 + razi, HEALTH_GUI_Y + razi/2))
 
     def draw_background_rect(self, screen, direction):
         height = COOLDOWN_RECT_HEIGHT
