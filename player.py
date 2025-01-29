@@ -55,8 +55,9 @@ class character:
     def draw_cooldown(self, max_cooldown, cooldown_progress, screen, x, y, w, h):
         if cooldown_progress > max_cooldown:
                 cooldown_progress = max_cooldown
-        pygame.draw.rect(screen, "black", (x, y, max_cooldown*(w/max_cooldown), h))
-        pygame.draw.rect(screen, "red", (x,y,cooldown_progress*(w/max_cooldown), h))
+        razi = 4
+        pygame.draw.rect(screen, "black", (x, y, max_cooldown*(w/max_cooldown) + razi, h + razi))
+        pygame.draw.rect(screen, "yellow", (x + razi/2,y + razi/2,cooldown_progress*(w/max_cooldown), h))
 
     def draw_cooldowns(self, screen, tick, player, type):
         if player.key_num == 1:
@@ -83,6 +84,7 @@ class character:
             self.draw_cooldown(homing_bullet_cooldown, homing_bullet_progress, screen, margin, COOLDOWN_GUI_Y2, COOLDOWN_GUI_WIDTH, COOLDOWN_GUI_HEIGHT)
 
     def draw_health_bar(self, screen, player):
+        razi = 4
         if player.key_num == 1:
             margin = HEALTH_GUI_LEFT_MARGIN
         else:
@@ -91,8 +93,15 @@ class character:
         max_health = PLAYER_MAX_HEALTH
         current_health = player.health
 
-        pygame.draw.rect(screen, "black", (margin,HEALTH_GUI_Y, max_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
-        pygame.draw.rect(screen, "red", (margin,HEALTH_GUI_Y, current_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
+        font = pygame.font.Font(None, 25)
+        health_text = str(current_health) + "/" + str(max_health)
+        health_text = font.render(health_text, True, "black")
+
+
+        pygame.draw.rect(screen, "white", (margin,HEALTH_GUI_Y, max_health*(HEALTH_GUI_WIDTH/max_health) + razi, HEALTH_GUI_HEIGHT+razi))
+        pygame.draw.rect(screen, "red", (margin + razi/2,HEALTH_GUI_Y + razi/2, current_health*(HEALTH_GUI_WIDTH/max_health), HEALTH_GUI_HEIGHT))
+
+        screen.blit(health_text, (margin + HEALTH_GUI_WIDTH/2 - health_text.get_width()/2, HEALTH_GUI_Y + razi/2))
 
     def draw_background_rect(self, screen, direction):
         height = COOLDOWN_RECT_HEIGHT
