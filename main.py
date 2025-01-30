@@ -38,7 +38,7 @@ while True:
         game.screen.blit(scaled_image, image_rect)
 
         title_font = pygame.font.Font(None, TITLE_FONT_SIZE)
-        title_surf = title_font.render("Gunman and Samurai", True, FONT_COLOR)
+        title_surf = title_font.render("Samurai and Gunman", True, FONT_COLOR)
         title_rect = title_surf.get_rect(center=(WIDTH // 2, 100))
         pygame.draw.rect(game.screen, GRAY, title_rect)
         game.screen.blit(title_surf, title_rect)    
