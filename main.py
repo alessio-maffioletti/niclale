@@ -88,6 +88,19 @@ while True:
         title_rect = title_surf.get_rect(center=(WIDTH // 2, 100))
         game.screen.blit(title_surf, title_rect)  
 
+        # Draw loser side
+        if game.player1.health <= 0:
+            image1 = pygame.image.load(RED_SAMURAI_TEXTURES + "idle/idle_0.png" )
+            image2 = pygame.image.load(RED_GUNMAN_TEXTURES + "idle/gunman_1.png" )
+        else:
+            image1 = pygame.image.load(BLUE_SAMURAI_TEXTURES + "idle/idle_0.png" )
+            image2 = pygame.image.load(BLUE_GUNMAN_TEXTURES + "idle/samurai_1.png" )
+
+        scaled_image1 = pygame.transform.scale(image1, (200, 200))
+        scaled_image2 = pygame.transform.scale(image2, (200, 200))
+        game.screen.blit(scaled_image1, (WIDTH // 2 - 300, 300))
+        game.screen.blit(scaled_image2, (WIDTH // 2 + 100, 300))
+
         # Draw buttons
         for button in game.game_over_buttons:
             button.draw(game.screen)
