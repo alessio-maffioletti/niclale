@@ -52,6 +52,14 @@ SAMURAI_SWORD_Y_OFFSET_1 = -5
 SAMURAI_SWORD_Y_OFFSET_2 = -5
 
 
+CHAINS_TEXTURE = textures + "chains/chains.png"
+CHAINS_WIDTH = 20
+CHAINS_HEIGHT = 70
+
+CHAINS_X_OFFSET = -20
+CHAINS_Y_OFFSET = -10
+
+
 
 IDLE_FOLDER_NAME = "idle/"
 WALK_FOLDER_NAME = "walk/"
@@ -179,6 +187,7 @@ MAP_SELECT_COLOR = (97, 64, 81)
 MAP_1 = textures + "maps/map1.png"
 MAP_2 = textures + "maps/map2.png"
 MAP_3 = textures + "maps/map3.png"
+MAP_4 = textures + "maps/map4.png"
 
 GAME_OVER_COLOR = (0, 0, 0)
 GAME_OVER_FONT_SIZE = 80

@@ -139,6 +139,18 @@ class Samurai(character):
     def parry_animation(self, screen, tick, player):
         pass
 
+    def draw_stun(self, screen, player):
+        chains_texture = pygame.image.load(CHAINS_TEXTURE)
+        chains1 = pygame.transform.scale(chains_texture, (CHAINS_WIDTH, CHAINS_HEIGHT))
+        chains2 = pygame.transform.scale(chains_texture, (CHAINS_WIDTH, CHAINS_HEIGHT))
+
+        chains1 = pygame.transform.rotate(chains1, math.degrees(45))
+        chains2 = pygame.transform.rotate(chains2, math.degrees(-45))
+
+        screen.blit(chains1, (player.x + CHAINS_X_OFFSET, player.y + CHAINS_Y_OFFSET))
+        screen.blit(chains2, (player.x + CHAINS_X_OFFSET, player.y + CHAINS_Y_OFFSET))
+
+
 
 
 
@@ -215,6 +227,8 @@ class Player:
                 self.red_samurai.draw_background_rect(screen, "left")
                 self.red_samurai.draw_cooldowns(screen, tick, self)
                 self.red_samurai.draw_health_bar(screen, self)
+                if self.stunned:
+                    self.red_samurai.draw_stun(screen, self)
             else:
                 #BLUE
                 self.blue_samurai.draw_character(screen, tick, self)
@@ -225,6 +239,8 @@ class Player:
                 self.red_samurai.draw_background_rect(screen, "right")
                 self.blue_samurai.draw_cooldowns(screen, tick, self)
                 self.blue_samurai.draw_health_bar(screen, self)
+                if self.stunned:
+                    self.blue_samurai.draw_stun(screen, self)
             
         else:
             #GUNMAN
