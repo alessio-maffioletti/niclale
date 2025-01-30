@@ -138,7 +138,6 @@ class Samurai(character):
         screen.blit(self.sword2, (player.x + SAMURAI_SWORD_X_OFFSET_2, player.y + SAMURAI_SWORD_Y_OFFSET_2))
 
     def parry_animation(self, screen, tick, player):
-        print("dd")
         parry_texture = self.parry_texture
         surface = pygame.Surface((PARRY_WIDTH, PARRY_HEIGHT), pygame.SRCALPHA)
         surface.set_alpha(PARRY_ALPHA)
@@ -310,10 +309,6 @@ class Player:
                 self.stunned = False
 
     def parry(self, tick):
-        print("parry")
-        #self.parrying = True
-        #self.last_parry = tick
-
         for bullet in self.game.bullet_list:
             if bullet.num != self.key_num:
                 if circle_point_collision(self.x, self.y, PARRY_RANGE, bullet.x + bullet.width // 2, bullet.y + bullet.height // 2):
@@ -402,11 +397,15 @@ class Player:
                     self.speed = self.dash_speed
 
                 if keys[pygame.K_k] and tick - self.last_parry > self.parry_cooldown:
+                    self.parrying = True
+                    self.last_parry = tick
                     self.parry(tick)
                 
                 if self.parrying:
                     if tick - self.last_parry > self.parry_length:
                         self.parrying = False
+                    else:
+                        self.parry(tick)
 
 
             if keys[pygame.K_UP]:
