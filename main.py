@@ -151,9 +151,6 @@ while True:
         if game.player1.health <= 0 or game.player2.health <= 0:
             game.in_game = False
             game.game_over = True
-            
-
-
-        
+                    
         pygame.display.update()
         game.tick += 1

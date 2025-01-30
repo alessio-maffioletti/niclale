@@ -119,6 +119,7 @@ class Samurai(character):
     def __init__(self, folder):
         self.parry_animation_index = 0
         self.parry_animation_tick = 0
+        self.parry_texture = pygame.image.load(folder + PARRY_TEXTURE)
         super().__init__(folder)
     def draw_cooldowns(self, screen, tick, player):
         type = "samurai"
@@ -137,7 +138,16 @@ class Samurai(character):
         screen.blit(self.sword2, (player.x + SAMURAI_SWORD_X_OFFSET_2, player.y + SAMURAI_SWORD_Y_OFFSET_2))
 
     def parry_animation(self, screen, tick, player):
-        pass
+        print("dd")
+        parry_texture = self.parry_texture
+        surface = pygame.Surface((PARRY_WIDTH, PARRY_HEIGHT), pygame.SRCALPHA)
+        surface.set_alpha(PARRY_ALPHA)
+        parry_texture = pygame.transform.scale(parry_texture, (PARRY_WIDTH, PARRY_HEIGHT))
+
+        surface.blit(parry_texture, (0, 0))
+
+        screen.blit(surface, (player.x + PARRY_X_OFFSET, player.y + PARRY_Y_OFFSET))
+
 
     def draw_stun(self, screen, player):
         chains_texture = pygame.image.load(CHAINS_TEXTURE)
@@ -149,6 +159,16 @@ class Samurai(character):
 
         screen.blit(chains1, (player.x + CHAINS_X_OFFSET, player.y + CHAINS_Y_OFFSET))
         screen.blit(chains2, (player.x + CHAINS_X_OFFSET, player.y + CHAINS_Y_OFFSET))
+
+    def draw_immunity(self, screen, player):
+        surface = pygame.Surface((IMMUNITY_WIDTH, IMMUNITY_HEIGHT), pygame.SRCALPHA)
+        surface.set_alpha(IMMUNITY_ALPHA)
+        immunity_texture = pygame.image.load(IMMUNITY_TEXTURE)
+        immunity = pygame.transform.scale(immunity_texture, (IMMUNITY_WIDTH, IMMUNITY_HEIGHT))
+
+        surface.blit(immunity, (0, 0))
+        screen.blit(surface, (player.x + IMMUNITY_X_OFFSET, player.y + IMMUNITY_Y_OFFSET))
+        
 
 
 
@@ -214,7 +234,8 @@ class Player:
         pygame.draw.ellipse(screen, "black", (self.x + PLAYER_SHADOW_OFFSET_X, self.y + PLAYER_SHADOW_OFFSET_Y, PLAYER_SHADOW_RADIUS_X, PLAYER_SHADOW_RADIUS_Y))        
         if self.player_num == 1:
             if self.parrying:
-                pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
+                pass
+                #pygame.draw.circle(screen, "lightblue", (self.x + self.width // 2, self.y + self.height // 2), PARRY_RANGE)
 
             #SAMURAI
             if self.key_num == 1:
@@ -229,6 +250,8 @@ class Player:
                 self.red_samurai.draw_health_bar(screen, self)
                 if self.stunned:
                     self.red_samurai.draw_stun(screen, self)
+                if self.immunity:
+                    self.red_samurai.draw_immunity(screen, self)
             else:
                 #BLUE
                 self.blue_samurai.draw_character(screen, tick, self)
@@ -241,6 +264,9 @@ class Player:
                 self.blue_samurai.draw_health_bar(screen, self)
                 if self.stunned:
                     self.blue_samurai.draw_stun(screen, self)
+                if self.immunity:
+                    self.blue_samurai.draw_immunity(screen, self)
+
             
         else:
             #GUNMAN
