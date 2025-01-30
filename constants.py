@@ -19,6 +19,7 @@ D_WALL_HEIGHT = 20 #int(WALL_WIDTH/2)
 WALLS1 = json.load(open(os.curdir + "/niclale/walls1.json"))
 WALLS2 = json.load(open(os.curdir + "/niclale/walls2.json"))
 WALLS3 = json.load(open(os.curdir + "/niclale/walls3.json"))
+WALLS4 = json.load(open(os.curdir + "/niclale/walls4.json"))
 textures = os.curdir + "/niclale/textures/"
 
 WALL_TEXTURE = textures + "wall.png"
