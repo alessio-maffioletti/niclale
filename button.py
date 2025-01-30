@@ -6,7 +6,7 @@ class Button:
         self.game = game
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
-        self.gray = ORANGE
+        self.gray = GRAY
         self.hover_color = HOVER_COLOR
         self.callback = callback
         self.font = pygame.font.Font(None, BUTTON_FONT_SIZE)
@@ -17,7 +17,7 @@ class Button:
         if self.rect.collidepoint(mouse_pos):
             color = self.hover_color
         else:
-            color = ORANGE
+            color = GRAY
 
         pygame.draw.rect(screen, color, self.rect)
         

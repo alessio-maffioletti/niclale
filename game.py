@@ -57,9 +57,9 @@ class Game:
         self.map_index = 1
 
         self.buttons = [
-            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
-            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT, "Quit", self, quit_game_callback),
-            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT, "Select map", self, select_map_callback)
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT, "Quit", self, quit_game_callback),
+            button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 450, BUTTON_WIDTH, BUTTON_HEIGHT, "Select map", self, select_map_callback)
         ]
         self.picture_buttons = [
             button.PictureButton(WIDTH // 4 - IMG_WIDTH // 2 + 10, HEIGHT // 4 - IMG_HEIGHT // 2 + 10, IMG_WIDTH, IMG_HEIGHT, MAP_1, self, set_map_index_callback, 1),
