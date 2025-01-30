@@ -59,6 +59,13 @@ while True:
     if game.in_map_select:
         game.screen.fill(MAP_SELECT_COLOR)
 
+        # Blit image
+        image_rect = game.screen.get_rect()
+        image = pygame.image.load(IMG_MAPSELECT)
+        scaled_image = pygame.transform.scale(image, (WIDTH, HEIGHT))
+        game.screen.blit(scaled_image, image_rect)
+
+
         # Draw buttons
         for button in game.picture_buttons:
             button.draw(game.screen)
