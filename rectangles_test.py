@@ -4,7 +4,7 @@ import collision_rects
 from constants import *
 
 # Example rectangles (replace with the output from merge_vertical_rectangles)
-rectangles = collision_rects.merge_vertical_rectangles(collision_rects.group_horizontal_blocks(WALLS2, WALL_WIDTH))
+rectangles = collision_rects.merge_vertical_rectangles(collision_rects.group_horizontal_blocks(WALLS4, WALL_WIDTH))
 
 # Screen dimensions
 SCREEN_WIDTH = 600

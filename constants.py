@@ -178,6 +178,7 @@ MAP_SELECT_COLOR = (97, 64, 81)
 MAP_1 = textures + "maps/map1.png"
 MAP_2 = textures + "maps/map2.png"
 MAP_3 = textures + "maps/map3.png"
+MAP_4 = textures + "maps/map4.png"
 
 GAME_OVER_COLOR = (0, 0, 0)
 GAME_OVER_FONT_SIZE = 80

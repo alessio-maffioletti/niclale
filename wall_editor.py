@@ -11,7 +11,7 @@ NORMAL_WALL_COLOR = (150, 150, 150)  # Color for normal wall (False)
 THREED_WALL_COLOR = (0, 0, 0)        # Color for 3D wall (True)
 GRID_COLOR = (200, 200, 200)
 LOCKED_COLOR = (255, 0, 0)
-SAVE_FILE = "walls3.json"
+SAVE_FILE = "walls.json"
 
 LOCKED_CELLS = {(1, 10), (18, 10)}
 
