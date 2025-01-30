@@ -194,3 +194,4 @@ GAME_OVER_FONT_SIZE = 80
 GAME_OVER_FONT_COLOR = (255, 255, 255)
 
 IMG_FRONTSCREEN = textures + "frontscreen.png"
+IMG_MAPSELECT = textures + "map_selection.png"
