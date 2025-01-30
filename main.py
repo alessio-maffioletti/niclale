@@ -31,10 +31,16 @@ while True:
     if game.in_menu:
         game.screen.fill((255, 255, 255))
 
-        # Draw title
+        # Blit image
+        image_rect = game.screen.get_rect()
+        image = pygame.image.load(IMG_FRONTSCREEN)
+        scaled_image = pygame.transform.scale(image, (WIDTH, HEIGHT))
+        game.screen.blit(scaled_image, image_rect)
+
         title_font = pygame.font.Font(None, TITLE_FONT_SIZE)
         title_surf = title_font.render("Gunman and Samurai", True, FONT_COLOR)
         title_rect = title_surf.get_rect(center=(WIDTH // 2, 100))
+        pygame.draw.rect(game.screen, GRAY, title_rect)
         game.screen.blit(title_surf, title_rect)    
 
         # Draw buttons
