@@ -54,7 +54,7 @@ class Game:
         self.in_map_select = False
         self.game_over = False
 
-        self.map_index = 3
+        self.map_index = 1
 
         self.buttons = [
             button.Button(WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Start game", self, start_game_callback),
