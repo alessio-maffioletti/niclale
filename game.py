@@ -131,11 +131,17 @@ class Game:
                 self.screen.blit(texture, (w * GRID_WIDTH, h * GRID_WIDTH + D_WALL_HEIGHT))
 
     def draw_middle_bar(self):
+        bolt_image = pygame.image.load(BOLT_TEXTURE)
+        bolt_image = pygame.transform.scale(bolt_image, (BOLT_WIDTH, BOLT_HEIGHT))
+
         single_width = MIDDLE_BAR_WIDTH / LIVE_SWITCH
-        how_many = (self.player1.health + self.player2.health)%LIVE_SWITCH
-        if how_many == 0:
-            how_many = LIVE_SWITCH
+        how_many = LIVE_SWITCH - (self.player1.health + self.player2.health)%LIVE_SWITCH
+        if how_many == LIVE_SWITCH:
+            how_many = 0
+
         pygame.draw.rect(self.screen, "black", (WIDTH//2 - MIDDLE_BAR_WIDTH/2, MIDDLE_BAR_Y, MIDDLE_BAR_WIDTH, MIDDLE_BAR_HEIGHT))
 
         for i in range(how_many):
             pygame.draw.rect(self.screen, "green", (WIDTH//2 - MIDDLE_BAR_WIDTH/2 + single_width * i, MIDDLE_BAR_Y, single_width, MIDDLE_BAR_HEIGHT))
+        
+        self.screen.blit(bolt_image, (WIDTH//2 - MIDDLE_BAR_WIDTH/2 - BOLT_X_OFFSET, MIDDLE_BAR_Y - BOLT_Y_OFFSET))
