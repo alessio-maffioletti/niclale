@@ -87,7 +87,7 @@ class Game:
         self.player2 = player.Player(18 * GRID_WIDTH + 2, 10 * GRID_WIDTH, "blue", 2, self)
         
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("ninja and gunman")
+        pygame.display.set_caption("ninja and cowboy")
         self.clock = pygame.time.Clock()   
         self.tick = 0 
 
